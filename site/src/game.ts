@@ -237,7 +237,7 @@ async function vend() {
   } else {
     showTicket(model);
   }
-  prefetch(next);
+  if (canAR) prefetch(next);
 }
 
 // Back from AR: straight back to the machine.
@@ -364,4 +364,4 @@ function toy(model: Model) {
 }
 
 renderShelves();
-prefetch(next);
+if (canAR) prefetch(next);
