@@ -3,6 +3,10 @@
 #
 #   .venv/bin/python models/thumbs.py [id ...]
 #
+# Also renders the bigger pictures the use-case pages need (SHOTS), as WebP:
+#
+#   .venv/bin/python models/thumbs.py --shots
+#
 # Uses macOS's usdrecord. Wear models are rendered single-sided and without
 # their invisible head, so nothing fights or hides in the picture.
 import json, math, os, subprocess, sys, tempfile
@@ -17,8 +21,19 @@ FOCAL, APERTURE = 50.0, 20.955
 # Room scans are seen from high above, like a floor plan; the rest from a little above.
 VIEWS = {"room": (35, 55)}
 DEFAULT_VIEW = (30, 18)  # yaw, pitch in degrees
+# The use-case pages: name -> (model id, yaw, pitch). A pitch of 90 is a floor plan.
+SHOTS = {
+    "room-plan": ("room", 0, 90),
+    "room": ("room", 25, 48),
+    "saturn-v": ("saturn-v", 30, 4),
+    "lunar-module": ("lunar-module", 210, 10),
+    "curiosity": ("curiosity", 40, 12),
+    "aviators": ("aviators", 0, 4),
+    "aviators-side": ("aviators", 40, 10),
+    "visor": ("visor", 20, 6),
+}
 
-def render(model, size=512):
+def render(model, size=512, view=None, out=None):
     work = tempfile.mkdtemp()
     if model["camera"] == "wear":
         source = os.path.join(work, "model.usdc")
@@ -38,7 +53,7 @@ def render(model, size=512):
     box = UsdGeom.BBoxCache(Usd.TimeCode.EarliestTime(), ["default", "render"]).ComputeWorldBound(holder).ComputeAlignedRange()
     centre = box.GetMidpoint()
     radius = box.GetSize().GetLength() / 2
-    yaw, pitch = (math.radians(a) for a in VIEWS.get(model["id"], DEFAULT_VIEW))
+    yaw, pitch = (math.radians(a) for a in (view or VIEWS.get(model["id"], DEFAULT_VIEW)))
     fov = 2 * math.atan(APERTURE / 2 / FOCAL)
     distance = radius / math.sin(fov / 2) * 1.02
     eye = centre + Gf.Vec3d(math.sin(yaw) * math.cos(pitch), math.sin(pitch), math.cos(yaw) * math.cos(pitch)) * distance
@@ -48,8 +63,10 @@ def render(model, size=512):
     cam.CreateHorizontalApertureAttr(APERTURE)
     cam.CreateVerticalApertureAttr(APERTURE)
     cam.CreateClippingRangeAttr(Gf.Vec2f(distance / 100, distance * 4))
-    view = Gf.Matrix4d().SetLookAt(eye, centre, Gf.Vec3d(0, 1, 0))
-    cam.AddTransformOp().Set(view.GetInverse())
+    # Straight down, "up" in the picture is the far wall.
+    up = Gf.Vec3d(0, 0, -1) if abs(pitch) > math.radians(89) else Gf.Vec3d(0, 1, 0)
+    look = Gf.Matrix4d().SetLookAt(eye, centre, up)
+    cam.AddTransformOp().Set(look.GetInverse())
 
     # A soft sky all around, a warm key light and a cool rim light.
     UsdLux.DomeLight.Define(stage, "/Lights/Sky").CreateIntensityAttr(0.7)
@@ -63,7 +80,7 @@ def render(model, size=512):
     rim.AddRotateXYZOp().Set(Gf.Vec3f(-20, 200, 0))
     stage.GetRootLayer().Save()
 
-    out = os.path.join(SITE, "thumbs", f"{model['id']}.png")
+    out = out or os.path.join(SITE, "thumbs", f"{model['id']}.png")
     subprocess.run(["usdrecord", "--camera", "/Camera", "--imageWidth", str(size), shot, out], check=True, capture_output=True)
     trim(out, size)
     return out
@@ -85,6 +102,22 @@ def trim(path, size=512, margin=0.03):
 if __name__ == "__main__":
     os.makedirs(os.path.join(SITE, "thumbs"), exist_ok=True)
     wanted = set(sys.argv[1:])
+    if wanted == {"--shots"}:
+        from PIL import Image
+        os.makedirs(os.path.join(SITE, "shots"), exist_ok=True)
+        models = {m["id"]: m for m in CATALOG}
+        for name, (id, yaw, pitch) in SHOTS.items():
+            png = os.path.join(tempfile.mkdtemp(), f"{name}.png")
+            render(models[id], 1200, (yaw, pitch), png)
+            # Cropped to the model, so a page can fit it to any box.
+            im = Image.open(png)
+            left, top, right, bottom = im.getchannel("A").getbbox()
+            pad = round(max(right - left, bottom - top) * 0.04)
+            im = im.crop((max(0, left - pad), max(0, top - pad), min(im.width, right + pad), min(im.height, bottom + pad)))
+            out = os.path.join(SITE, "shots", f"{name}.webp")
+            im.save(out, quality=86, method=6)
+            print(out)
+        sys.exit()
     if wanted == {"--trim"}:
         # Just re-trim what's already rendered.
         for model in CATALOG:

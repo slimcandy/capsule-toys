@@ -5,6 +5,12 @@
 [build.environment]
   NODE_VERSION = "22"
 
+# "How it works" became the short About page.
+[[redirects]]
+  from = "/how-it-works"
+  to = "/about"
+  status = 301
+
 [[headers]]
   for = "/*"
   [headers.values]

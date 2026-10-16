@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>About Capsule Toys</title>
+    <meta name="description" content="A capsule toy machine for AR Quick Look: one link with rel=&quot;ar&quot; opens a 3D model in augmented reality on an iPhone. What it is, the one line of HTML, and where it works." />
+    <link rel="canonical" href="https://ar.avolkov.dev/about" />
+    <meta name="author" content="Aleksei Volkov" />
+    <meta name="theme-color" content="#f5ecdc" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" href="/icons/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Capsule Toys" />
+    <meta property="og:locale" content="en_GB" />
+    <meta property="og:url" content="https://ar.avolkov.dev/about" />
+    <meta property="og:title" content="About Capsule Toys: AR from a single link" />
+    <meta property="og:description" content="A capsule toy machine for your iPhone, and the one line of HTML behind it: a link with rel=&quot;ar&quot; opens a 3D model in AR." />
+    <meta property="og:image" content="https://ar.avolkov.dev/share/card-1200x630.jpg?v=4" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="A vintage capsule toy machine with a glass globe full of coloured capsules, on a wooden counter in a dim arcade." />
+    <meta property="og:publish_date" content="2026-10-16" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="stylesheet" href="./src/style.css" />
+  </head>
+  <body class="page">
+    <main class="mx-auto max-w-2xl px-4 pb-12">
+      <a href="/" class="back">← Back to the machine</a>
+
+      <article class="leaflet">
+        <p class="leaflet-kicker">About</p>
+        <h1 class="leaflet-title">Capsule Toys</h1>
+        <p class="lead">
+          A capsule toy machine for your iPhone. Turn the knob, and a random 3D model opens in augmented reality:
+          hats and glasses on your face, spacecraft on your floor.
+        </p>
+        <p>
+          There's no app and no 3D engine on the page. Safari's AR Quick Look does the 3D; the page only links to the model the right way,
+          with <code>rel="ar"</code> and a picture inside:
+        </p>
+<pre class="wrap"><code>&lt;a rel="ar" href="/models/crown.usdz"&gt;
+  &lt;img src="/thumbs/crown.png" alt="Royal crown"&gt;
+&lt;/a&gt;</code></pre>
+        <p>
+          Everything after a <code>#</code> sets up the banner inside AR: a title, a price, a button or Apple Pay, or a page of your own.
+          Every toy's name and credit is a page like that:
+        </p>
+<pre class="wrap"><code>/models/crown.usdz#custom=https://ar.avolkov.dev/banner/crown.html</code></pre>
+        <p>
+          It works in Safari on iPhone and iPad, and on Apple Vision Pro. Hats and glasses need Face ID's front camera.
+          On other devices, the machine shows a QR code to play on an iPhone.
+        </p>
+
+        <ul role="list" class="about-links">
+          <li><a href="/use-cases/">Use cases</a>: four websites that use it for real work</li>
+          <li><a href="/create">Create your own</a>: the HTML for any <code>.usdz</code></li>
+          <li><a href="https://webkit.org/blog/8421/viewing-augmented-reality-assets-in-safari-for-ios/">Viewing AR assets in Safari for iOS</a>, WebKit</li>
+          <li><a href="https://developer.apple.com/documentation/arkit/adding-an-apple-pay-button-or-a-custom-action-in-ar-quick-look">Adding an Apple Pay button or a custom action in AR Quick Look</a>, Apple</li>
+          <li><a href="https://github.com/slimcandy/capsule-toys">The source</a>, with the details: opening AR from code, the invisible head, and how every model is checked</li>
+        </ul>
+
+        <h2 id="credits">Models</h2>
+        <ul class="credits-list" id="credits-list" role="list"></ul>
+      </article>
+
+      <nav class="links" aria-label="More">
+        <a href="/">Play the machine</a>
+        <a href="/use-cases/">Use cases</a>
+        <a href="/create">Create your own</a>
+      </nav>
+    </main>
+    <script type="module" src="./src/about.ts"></script>
+  </body>
+</html>

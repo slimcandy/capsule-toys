@@ -1,0 +1,191 @@
+/* The use cases: four made-up websites, each with a look of its own, in a
+   plain frame that says what they are. Only the use-case pages are scanned. */
+@import "tailwindcss" source(none);
+@source "../use-cases";
+@source "./use-case.ts";
+@source "./use-cases";
+
+@font-face {
+  font-family: "MonoLisa";
+  src: url("/fonts/MonoLisa-Normal.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  /* System faces only: on an iPhone each of these is already installed. */
+  --font-sans: -apple-system, system-ui, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "MonoLisa", ui-monospace, "SF Mono", Menlo, monospace;
+  --font-avenir: "Avenir Next", Avenir, -apple-system, system-ui, sans-serif;
+  --font-didot: Didot, "Bodoni 72", "Bodoni MT", "Times New Roman", serif;
+  --font-charter: Charter, "Iowan Old Style", ui-serif, Georgia, serif;
+  --font-rounded: ui-rounded, "SF Pro Rounded", "Arial Rounded MT Bold", system-ui, sans-serif;
+  --font-futura: Futura, "Century Gothic", "Avenir Next", system-ui, sans-serif;
+
+  /* Harbour & Hill, estate agents: sand, ink and a deep sea green. */
+  --color-sand-50: oklch(0.985 0.006 90);
+  --color-sand-100: oklch(0.96 0.014 85);
+  --color-sand-200: oklch(0.91 0.022 80);
+  --color-harbour-900: oklch(0.24 0.03 230);
+  --color-harbour-600: oklch(0.45 0.03 230);
+  --color-moss-50: oklch(0.96 0.03 165);
+  --color-moss-600: oklch(0.47 0.11 165);
+  --color-moss-700: oklch(0.4 0.1 165);
+  --color-moss-800: oklch(0.33 0.08 165);
+
+  /* Perigee, a science magazine: night sky, newsprint and a launch-flame orange. */
+  --color-night-950: oklch(0.14 0.025 265);
+  --color-night-900: oklch(0.19 0.03 265);
+  --color-night-700: oklch(0.32 0.03 265);
+  --color-newsprint: oklch(0.975 0.008 85);
+  --color-flame-400: oklch(0.76 0.19 55);
+  --color-flame-500: oklch(0.68 0.22 42);
+  --color-flame-600: oklch(0.58 0.2 35);
+
+  /* Hollow Lantern, a costume shop: aubergine dark, bone and a pumpkin glow. */
+  --color-crypt-950: oklch(0.15 0.03 310);
+  --color-crypt-900: oklch(0.2 0.04 310);
+  --color-crypt-800: oklch(0.26 0.05 310);
+  --color-crypt-700: oklch(0.34 0.06 310);
+  --color-bone: oklch(0.95 0.025 85);
+  --color-pumpkin-300: oklch(0.85 0.14 70);
+  --color-pumpkin-400: oklch(0.78 0.19 58);
+  --color-pumpkin-500: oklch(0.72 0.21 50);
+  --color-slime: oklch(0.87 0.22 135);
+
+  /* Glint, opticians: ice, graphite, a sky-blue lens and gold wire. */
+  --color-ice-50: oklch(0.985 0.006 230);
+  --color-ice-100: oklch(0.96 0.015 230);
+  --color-ice-200: oklch(0.92 0.025 230);
+  --color-graphite-900: oklch(0.22 0.015 250);
+  --color-graphite-600: oklch(0.47 0.02 250);
+  --color-lens-500: oklch(0.62 0.17 245);
+  --color-lens-600: oklch(0.53 0.17 250);
+  --color-wire: oklch(0.74 0.11 85);
+}
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    @apply font-sans antialiased;
+  }
+  :focus-visible {
+    outline: 3px solid oklch(0.7 0.17 250);
+    outline-offset: 3px;
+  }
+}
+
+@view-transition {
+  navigation: auto;
+}
+
+/* ---- The frame: a strip on top that says the shop is made up, and a box at
+   the bottom with the code. Plain, so it's clearly not part of the shop. */
+
+.demo-bar {
+  @apply flex items-center justify-between gap-3 bg-zinc-950 px-4 font-sans text-xs text-zinc-300;
+  padding-top: max(0.6rem, env(safe-area-inset-top));
+  padding-bottom: 0.6rem;
+}
+.demo-bar a {
+  @apply font-semibold whitespace-nowrap text-white;
+}
+.demo-bar b {
+  @apply font-semibold text-white;
+}
+
+.how {
+  @apply bg-zinc-950 px-4 py-12 font-sans text-zinc-300;
+  padding-bottom: max(3rem, env(safe-area-inset-bottom));
+}
+.how-inner {
+  @apply mx-auto max-w-2xl;
+}
+.how h2 {
+  @apply text-xs font-semibold tracking-widest text-zinc-400 uppercase;
+}
+.how h3 {
+  @apply mt-2 text-xl font-semibold text-white;
+}
+.how p {
+  @apply mt-3 text-sm/6;
+}
+.how code {
+  @apply font-mono text-[0.85em] text-white;
+}
+.how pre {
+  @apply mt-4 overflow-x-auto rounded-lg bg-zinc-900 p-4 font-mono text-xs/5 text-zinc-200 ring-1 ring-white/10;
+}
+.how pre.wrap {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.how a {
+  @apply font-semibold text-white underline underline-offset-2;
+}
+.how-links {
+  @apply mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm;
+}
+
+/* ---- No AR on this device: a QR code to open the page on an iPhone. */
+
+.no-ar {
+  @apply m-auto font-sans w-[min(22rem,calc(100%-2rem))] rounded-2xl bg-white p-6 text-zinc-900 shadow-2xl;
+}
+.no-ar::backdrop {
+  background: oklch(0.15 0.01 260 / 0.6);
+  backdrop-filter: blur(4px);
+}
+.no-ar h2 {
+  @apply text-lg font-semibold;
+}
+.no-ar p {
+  @apply mt-2 text-sm/6 text-zinc-600;
+}
+.no-ar .qr {
+  @apply mx-auto mt-4 w-40 rounded-lg bg-white p-2 ring-1 ring-zinc-200;
+}
+.no-ar .qr svg {
+  @apply block h-auto w-full;
+}
+.no-ar button {
+  @apply mt-5 w-full rounded-md bg-zinc-900 px-3 py-2.5 text-sm font-semibold text-white hover:bg-zinc-700;
+}
+
+/* A short flash on whatever a tap in AR brought you to. */
+@keyframes arrived {
+  from { box-shadow: 0 0 0 6px var(--arrived, oklch(0.7 0.17 250 / 0.6)); }
+  to { box-shadow: 0 0 0 6px transparent; }
+}
+.arrived {
+  animation: arrived 1.6s ease-out;
+}
+
+/* ---- Harbour & Hill: the floor plan is the render, inverted: dark walls on white. */
+
+.plan {
+  filter: invert(1) grayscale(1) contrast(1.15);
+  mix-blend-mode: multiply;
+}
+
+/* ---- Perigee: a drop cap, like the 2023 page had. */
+
+.dropcap::first-letter {
+  float: left;
+  margin: 0.08em 0.1em 0 0;
+  font-family: var(--font-didot);
+  font-size: 4.4em;
+  line-height: 0.8;
+  color: var(--color-flame-600);
+}
+
+/* ---- Hollow Lantern: a soft pumpkin glow behind each costume. */
+
+.lantern {
+  background:
+    radial-gradient(circle at 50% 62%, oklch(0.72 0.21 50 / 0.45), transparent 62%),
+    var(--color-crypt-900);
+}

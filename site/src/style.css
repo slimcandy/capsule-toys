@@ -558,7 +558,7 @@
   navigation: auto;
 }
 
-/* ---- How it works and Create your own: plain pages on paper. */
+/* ---- About, Use cases and Create your own: plain pages on paper. */
 
 body.page {
   @apply font-sans;
@@ -631,6 +631,13 @@ body.page {
   background: oklch(0.91 0.03 80);
   box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.08);
 }
+.about-links {
+  @apply mt-6 space-y-2 border-t border-ink/10 pt-5 text-[0.95rem]/6 text-ink-soft;
+}
+.leaflet pre.wrap {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
 .leaflet .note {
   font-size: 0.82rem;
   color: var(--color-ink-soft);
@@ -673,6 +680,32 @@ body.page .links a:hover {
 }
 .credits-list li + li {
   margin-top: 0.3rem;
+}
+
+/* ---- Use cases: one card per made-up website. */
+
+.case {
+  @apply flex h-full flex-col rounded-xl bg-white p-3 ring-1 ring-ink/10 transition hover:ring-ink/25;
+}
+.leaflet a.case {
+  font-weight: inherit;
+  color: inherit;
+  text-decoration: none;
+}
+.case-image {
+  @apply aspect-[16/10] w-full rounded-lg object-contain p-3 transition duration-300 group-hover:scale-[1.02];
+}
+.case-site {
+  @apply mt-3 text-xs font-semibold tracking-wide text-ink-soft uppercase;
+}
+.case-title {
+  @apply mt-0.5 font-serif text-lg font-bold text-ink;
+}
+.case-text {
+  @apply mt-1 flex-1 text-sm/6 text-ink-soft;
+}
+.case-trick {
+  @apply mt-3 self-start rounded-full bg-enamel/10 px-2.5 py-1 text-xs font-semibold text-enamel-dark;
 }
 
 /* ---- Create your own */
