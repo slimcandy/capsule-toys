@@ -7,6 +7,5 @@ __pycache__
 /models/downloads/
 /site/public/fonts/MonoLisa-*.ttf
 
-# Local Netlify folder
-.netlify
+# Local Netlify CLI state
 .netlify

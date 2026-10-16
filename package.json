@@ -3,9 +3,32 @@
   "version": "2.0.0",
   "private": true,
   "description": "A capsule toy machine for augmented reality: turn the knob, and a random model opens in AR Quick Look on your iPhone.",
-  "type": "module",
-  "license": "MIT",
+  "keywords": [
+    "ar",
+    "ar-quick-look",
+    "usdz",
+    "augmented-reality",
+    "ios",
+    "safari",
+    "game",
+    "skeuomorphism",
+    "vite",
+    "typescript"
+  ],
+  "homepage": "https://ar.avolkov.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/slimcandy/capsule-toys.git"
+  },
+  "bugs": {
+    "url": "https://github.com/slimcandy/capsule-toys/issues"
+  },
   "author": "Aleksei Volkov",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
   "scripts": {
     "dev": "vite",
     "test": "vitest run",

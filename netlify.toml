@@ -1,9 +1,7 @@
+# Node comes from .nvmrc.
 [build]
   command = "npm run build"
   publish = "dist"
-
-[build.environment]
-  NODE_VERSION = "22"
 
 # Pages that were live for a day: the examples are blocks on How it works now.
 [[redirects]]
