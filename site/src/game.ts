@@ -8,12 +8,16 @@ const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getEleme
 
 const SITE = "https://ar.avolkov.dev/";
 const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+/** How long a movement takes: none when the OS asks for less motion. Cross-fades stay. */
+const motion = (ms: number) => (reducedMotion ? 0 : ms);
 const canAR = supportsAR();
 
 const knob = $<HTMLButtonElement>("knob");
 const knobArt = knob.querySelector<HTMLElement>(".knob-bar-art")!;
 const play = $<HTMLButtonElement>("play");
 const reveal = $("reveal");
+// Behind the reveal: not reachable by keyboard while the reveal is up.
+const hall = document.querySelector("main")!;
 
 /** The capsule's picture for each rarity: blue, purple, glowing gold. */
 const capsuleArt = (model: Model) => `/art/capsule-${model.rarity}.png`;
@@ -168,7 +172,7 @@ async function vend() {
   sound.drop();
   inChute.animate(
     [{ translate: "-50% -180%" }, { translate: "-50% 0" }, { translate: "-50% -16%" }, { translate: "-50% 0" }],
-    { duration: 360, easing: "ease-in" },
+    { duration: motion(360), easing: "ease-in" },
   );
   await wait(460);
 
@@ -183,6 +187,7 @@ async function vend() {
   image.alt = model.title;
   $("ticket").hidden = true;
   reveal.hidden = false;
+  hall.inert = true;
   const from = inChute.getBoundingClientRect();
   const to = capsule.getBoundingClientRect();
   inChute.hidden = true;
@@ -196,15 +201,15 @@ async function vend() {
       { transform: "translate(0, -12%) scale(1.05) rotate(-15deg)", offset: 0.7 },
       { transform: "translate(0, 0) scale(1) rotate(0deg)" },
     ],
-    { duration: 520, easing: "cubic-bezier(0.2, 0.7, 0.3, 1)", fill: "both" },
+    { duration: motion(520), easing: "cubic-bezier(0.2, 0.7, 0.3, 1)", fill: "both" },
   ).finished;
   // A wobble, like it's about to burst.
-  await capsule.animate([{ rotate: "0deg" }, { rotate: "-9deg" }, { rotate: "8deg" }, { rotate: "-5deg" }, { rotate: "0deg" }], { duration: 300 }).finished;
+  await capsule.animate([{ rotate: "0deg" }, { rotate: "-9deg" }, { rotate: "8deg" }, { rotate: "-5deg" }, { rotate: "0deg" }], { duration: motion(300) }).finished;
 
   // Pop: the ball bursts into its two halves, which fly off.
   sound.pop(model.rarity);
-  const fly = { duration: 620, easing: "cubic-bezier(0.2, 0.8, 0.3, 1)", fill: "forwards" as const };
-  $("capsule-ball").animate([{ opacity: 1, scale: 1 }, { opacity: 0, scale: 1.25 }], { duration: 140, fill: "forwards" });
+  const fly = { duration: motion(620), easing: "cubic-bezier(0.2, 0.8, 0.3, 1)", fill: "forwards" as const };
+  $("capsule-ball").animate([{ opacity: 1, scale: 1 }, { opacity: 0, scale: 1.25 }], { duration: motion(140), fill: "forwards" });
   $("capsule-top").animate(
     [{ transform: "translate(18%, 30%) scale(0.7)", opacity: 1 }, { transform: "translate(-40%, -70%) rotate(-30deg)", opacity: 0 }],
     fly,
@@ -213,8 +218,8 @@ async function vend() {
     [{ transform: "translate(-6%, -22%) scale(0.7)", opacity: 1 }, { transform: "translate(35%, 70%) rotate(22deg)", opacity: 0 }],
     fly,
   );
-  glow.animate([{ opacity: 0, scale: 0.3 }, { opacity: 1, scale: 1.1 }, { opacity: 0.75, scale: 1 }], { duration: 700, fill: "forwards" });
-  image.animate([{ opacity: 0, scale: 0.4, translate: "0 18%" }, { opacity: 1, scale: 1, translate: "0 0" }], { duration: 520, easing: "cubic-bezier(0.2, 1.4, 0.4, 1)", fill: "forwards" });
+  glow.animate([{ opacity: 0, scale: 0.3 }, { opacity: 1, scale: 1.1 }, { opacity: 0.75, scale: 1 }], { duration: motion(700), fill: "forwards" });
+  image.animate([{ opacity: 0, scale: 0.4, translate: "0 18%" }, { opacity: 1, scale: 1, translate: "0 0" }], { duration: motion(520), easing: "cubic-bezier(0.2, 1.4, 0.4, 1)", fill: "forwards" });
 
   // It's yours.
   collect(model.id);
@@ -266,13 +271,14 @@ function present(model: Model) {
   $("reveal-glow").animate([{ opacity: 0.75 }], { duration: 0, fill: "forwards" });
   $("capsule").hidden = true;
   reveal.hidden = false;
+  hall.inert = true;
   $("reveal-backdrop").animate([{ opacity: 0 }, { opacity: 1 }], { duration: 220, fill: "both" });
   showTicket(model);
 }
 
 $("ticket-close").addEventListener("click", () => void finish());
-reveal.addEventListener("keydown", (event) => {
-  if (event.key === "Escape" && !$("ticket").hidden) void finish();
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && !reveal.hidden && !$("ticket").hidden) void finish();
 });
 
 /** The reveal closes and the toy drops onto its shelf. */
@@ -297,6 +303,7 @@ async function finish() {
   }
   await fade;
   reveal.hidden = true;
+  hall.inert = false;
   for (const el of reveal.querySelectorAll<HTMLElement>(".capsule, .capsule-ball, .capsule-half, .reveal-glow, .reveal-model, .reveal-backdrop")) {
     el.getAnimations().forEach((a) => a.cancel());
   }

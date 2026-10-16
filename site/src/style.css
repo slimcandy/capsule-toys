@@ -557,6 +557,16 @@
 @view-transition {
   navigation: auto;
 }
+/* Less motion: no cross-fade between pages, no flash on arrival. The machine's own
+   movements are shortened to nothing in game.ts. */
+@media (prefers-reduced-motion: reduce) {
+  @view-transition {
+    navigation: none;
+  }
+  .arrived {
+    animation: none;
+  }
+}
 
 /* ---- How it works and Create your own: plain pages on paper. */
 

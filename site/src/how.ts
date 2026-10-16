@@ -30,7 +30,7 @@ const $ = (id: string) => document.getElementById(id)!;
 
 /** Scrolls to an element and flashes it, so it's clear where a tap in AR led. */
 function arrive(element: HTMLElement) {
-  element.scrollIntoView({ behavior: "smooth", block: "center" });
+  element.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "center" });
   element.classList.remove("arrived");
   void element.offsetWidth;
   element.classList.add("arrived");
