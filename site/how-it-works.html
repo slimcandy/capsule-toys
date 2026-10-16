@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>How Capsule Toys works: AR from a single link</title>
+    <meta name="description" content="How a web page opens a 3D model in augmented reality on an iPhone with one link, and two examples of what that does on other websites: an article and a shop." />
+    <link rel="canonical" href="https://ar.avolkov.dev/how-it-works" />
+    <meta name="author" content="Aleksei Volkov" />
+    <meta name="theme-color" content="#f5ecdc" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" href="/icons/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Capsule Toys" />
+    <meta property="og:locale" content="en_GB" />
+    <meta property="og:url" content="https://ar.avolkov.dev/how-it-works" />
+    <meta property="og:title" content="How Capsule Toys works: AR from a single link" />
+    <meta property="og:description" content="One link with rel=&quot;ar&quot; opens a 3D model in AR on an iPhone. What that does in a game, in a magazine article and in a shop." />
+    <meta property="og:image" content="https://ar.avolkov.dev/share/card-1200x630.jpg?v=4" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="A vintage capsule toy machine with a glass globe full of coloured capsules, on a wooden counter in a dim arcade." />
+    <meta property="og:publish_date" content="2026-10-16" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="stylesheet" href="./src/style.css" />
+  </head>
+  <body class="page">
+    <main class="mx-auto max-w-2xl px-4 pb-12">
+      <a href="/" class="back">← Back to the machine</a>
+
+      <article class="leaflet">
+        <p class="leaflet-kicker">Instructions inside every capsule</p>
+        <h1 class="leaflet-title">How it works</h1>
+        <p class="lead">
+          There's no app and no 3D engine on this page. Safari on an iPhone already knows how to show a 3D model in your room:
+          it's called AR Quick Look. A web page only has to link to the model the right way, with <code>rel="ar"</code> and a picture inside:
+        </p>
+<pre class="wrap"><code>&lt;a rel="ar" href="/models/crown.usdz"&gt;
+  &lt;img src="/thumbs/crown.png" alt="Royal crown"&gt;
+&lt;/a&gt;</code></pre>
+        <p>
+          Everything after a <code>#</code> in the link sets up a banner at the bottom of the AR view: a title, a price,
+          a button or Apple Pay, or a page of your own. A tap on the button closes AR and sends a message back to the page.
+        </p>
+        <p>
+          It works in Safari on iPhone and iPad, and on Apple Vision Pro. Hats, masks and glasses need Face ID's front camera.
+        </p>
+
+        <h2>On other websites</h2>
+        <p>The machine is a game. The same link does real work, too. Open these on an iPhone and tap the picture.</p>
+
+        <!-- An article whose figure opens in your room. -->
+        <section class="example example-article" aria-label="Example: a magazine article">
+          <p class="example-masthead">Perigee <span>Science magazine</span></p>
+          <h3>Put the Moon landing on your kitchen table</h3>
+          <p class="example-dropcap">
+            On 20 July 1969, Neil Armstrong and Buzz Aldrin landed on the Moon in the lunar module <i>Eagle</i>.
+            A photograph never tells you how big it was. A figure in 3D does:
+          </p>
+          <figure>
+            <a rel="ar" data-id="lunar-module" class="example-figure"
+              href="/models/lunar-module.usdz#callToAction=Read%20on&amp;checkoutTitle=Fig.%201%20%C2%B7%20Lunar%20module&amp;checkoutSubtitle=1%3A4.7%20scale.%20The%20real%20one%20is%209.4%20m%20across">
+              <img src="/thumbs/lunar-module.png" width="512" height="512" loading="lazy" alt="Figure 1: a model of the Apollo 11 lunar module on its four legs." />
+              <span>View in your room</span>
+            </a>
+            <figcaption><b>Fig. 1</b> The lunar module at 1:4.7. Model: NINATOR, CC BY 4.0.</figcaption>
+          </figure>
+          <p id="after-lunar-module" class="example-more">
+            The real one was 7 metres tall and 9.4 metres across its legs. Its bottom half stayed on the Moon as the launch pad
+            for the top half, and it's still there.
+          </p>
+        </section>
+        <p class="example-note">
+          In AR, the figure gets a caption and a <b>Read on</b> button (<code>checkoutTitle</code>, <code>checkoutSubtitle</code>,
+          <code>callToAction</code>). The tap brings you back to the next paragraph.
+          <a href="/create?file=https%3A%2F%2Far.avolkov.dev%2Fmodels%2Flunar-module.usdz&amp;image=%2Fthumbs%2Flunar-module.png&amp;banner=button&amp;callToAction=Read%20on&amp;checkoutTitle=Fig.%201%20%C2%B7%20Lunar%20module&amp;checkoutSubtitle=1%3A4.7%20scale">Make a link like this</a>
+        </p>
+
+        <!-- A shop: try the mask on, buy it without leaving AR. -->
+        <section class="example example-shop" aria-label="Example: a costume shop">
+          <p class="example-shop-head">
+            <span>Hollow Lantern <small>Halloween costumes</small></span>
+            <span class="example-bag">Bag <b id="bag-count">0</b></span>
+          </p>
+          <div class="example-product">
+            <a rel="ar" data-id="hockey" class="example-product-image"
+              href="/models/hockey.usdz#applePayButtonType=buy&amp;checkoutTitle=Goalie%20mask&amp;checkoutSubtitle=One%20size&amp;price=%E2%82%AC24">
+              <img src="/thumbs/hockey.png" width="512" height="512" loading="lazy" alt="A white goalie mask with red slashes." />
+              <span>Try it on</span>
+            </a>
+            <div>
+              <h3>Goalie mask</h3>
+              <p>One size. Hockey stick not included.</p>
+              <p class="example-price">€24</p>
+              <button type="button" id="add-to-bag">Add to bag</button>
+              <p id="bag-note" class="example-bag-note" role="status" hidden></p>
+            </div>
+          </div>
+        </section>
+        <p class="example-note">
+          The mask is anchored to a face, so Safari opens the front camera. The banner has a <b>Buy with Apple Pay</b> button
+          (<code>applePayButtonType=buy</code>); the tap comes back to the page, which adds the mask to the bag. A real shop would open Apple Pay there.
+          <a href="/create?file=https%3A%2F%2Far.avolkov.dev%2Fmodels%2Fhockey.usdz&amp;image=%2Fthumbs%2Fhockey.png&amp;banner=pay&amp;applePayButtonType=buy&amp;checkoutTitle=Goalie%20mask&amp;checkoutSubtitle=One%20size&amp;price=%E2%82%AC24">Make a link like this</a>
+        </p>
+
+        <ul role="list" class="more-links">
+          <li><a href="https://webkit.org/blog/8421/viewing-augmented-reality-assets-in-safari-for-ios/">Viewing AR assets in Safari for iOS</a>, WebKit</li>
+          <li><a href="https://developer.apple.com/documentation/arkit/adding-an-apple-pay-button-or-a-custom-action-in-ar-quick-look">Adding an Apple Pay button or a custom action in AR Quick Look</a>, Apple</li>
+          <li><a href="https://github.com/slimcandy/capsule-toys">The source</a>, with the details: opening AR from code, the invisible head, how every model is checked</li>
+        </ul>
+
+        <h2 id="credits">Models</h2>
+        <ul class="credits-list" id="credits-list" role="list"></ul>
+      </article>
+
+      <nav class="links" aria-label="More">
+        <a href="/">Play the machine</a>
+        <a href="/create">Create your own</a>
+      </nav>
+    </main>
+    <script type="module" src="./src/how.ts"></script>
+  </body>
+</html>

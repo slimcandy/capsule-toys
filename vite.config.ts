@@ -30,17 +30,12 @@ export default defineConfig({
   build: {
     outDir: "../dist",
     emptyOutDir: true,
-    // Plain pages; the browser moves between them with view transitions.
+    // Three plain pages; the browser moves between them with view transitions.
     rollupOptions: {
       input: {
         game: "site/index.html",
-        about: "site/about.html",
+        how: "site/how-it-works.html",
         create: "site/create.html",
-        "use-cases": "site/use-cases/index.html",
-        flat: "site/use-cases/flat.html",
-        magazine: "site/use-cases/magazine.html",
-        costumes: "site/use-cases/costumes.html",
-        glasses: "site/use-cases/glasses.html",
       },
     },
   },

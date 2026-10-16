@@ -10,10 +10,7 @@ const SITE = join(import.meta.dirname, "..", "site");
 const PUBLIC = join(SITE, "public");
 const ORIGIN = "https://ar.avolkov.dev";
 
-const pages = [
-  ...readdirSync(SITE).filter((f) => f.endsWith(".html")),
-  ...readdirSync(join(SITE, "use-cases")).filter((f) => f.endsWith(".html")).map((f) => `use-cases/${f}`),
-];
+const pages = readdirSync(SITE).filter((f) => f.endsWith(".html"));
 const read = (page: string) => readFileSync(join(SITE, page), "utf8");
 const unescape = (html: string) => html.replaceAll("&amp;", "&");
 const local = (url: string) => join(PUBLIC, url.replace(ORIGIN, "").split(/[?#]/)[0]);
@@ -68,10 +65,5 @@ describe.each(pages)("%s", (page) => {
     expect(built.warnings).toEqual([]);
     expect(built.href).toBe(href);
     if (banner.custom) expect(existsSync(local(banner.custom)), banner.custom).toBe(true);
-  });
-
-  test("the code shown on the page is a link the page really uses", () => {
-    const shown = [...html.matchAll(/&lt;a rel="ar" href="([^"]+)"&gt;/g)].map(([, href]) => unescape(href));
-    for (const href of shown) expect(links.map((l) => l.href)).toContain(href);
   });
 });

@@ -5,10 +5,20 @@
 [build.environment]
   NODE_VERSION = "22"
 
-# "How it works" became the short About page.
+# Pages that were live for a day: the examples are blocks on How it works now.
 [[redirects]]
-  from = "/how-it-works"
-  to = "/about"
+  from = "/about"
+  to = "/how-it-works"
+  status = 301
+
+[[redirects]]
+  from = "/use-cases/*"
+  to = "/how-it-works"
+  status = 301
+
+[[redirects]]
+  from = "/use-cases"
+  to = "/how-it-works"
   status = 301
 
 [[headers]]

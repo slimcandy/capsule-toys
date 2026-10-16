@@ -1,10 +1,8 @@
-// Makes the link-preview cards (Open Graph, 1200×630) from the pages
-// themselves: the machine, each use case, and the four use cases together.
-// The app icons are cut from the same picture by scripts/art.py.
+// Makes the link-preview card (Open Graph, 1200×630) from the machine on the
+// page itself. The app icons are cut from the same picture by scripts/art.py.
 // Run after `npm run build`, with Playwright installed:
 //   npx vite preview --port 4173 & node scripts/share-card.mjs
 // sRGB JPEG: link previews often drop colour profiles.
-import { writeFile } from "node:fs/promises";
 import { webkit } from "playwright";
 
 const url = process.argv[2] ?? "http://localhost:4173/";
@@ -50,25 +48,5 @@ await card.addStyleTag({
 await card.waitForTimeout(300);
 await card.screenshot({ path: "site/public/share/card-1200x630.jpg", type: "jpeg", quality: 88 });
 
-// 3. Each use case: the top of its page, without the strip that says it's made up.
-const cases = ["flat", "magazine", "costumes", "glasses"];
-const shots = [];
-const site = await browser.newPage({ viewport: { width: 1200, height: 630 } });
-for (const name of cases) {
-  await site.goto(new URL(`/use-cases/${name}`, url).href, { waitUntil: "networkidle" });
-  await site.addStyleTag({ content: ".demo-bar { display: none !important }" });
-  await site.waitForTimeout(300);
-  const shot = await site.screenshot({ type: "jpeg", quality: 88, animations: "disabled" });
-  await writeFile(`site/public/share/${name}-1200x630.jpg`, shot);
-  shots.push(shot);
-}
-
-// 4. The use cases page: the four of them, two by two.
-await card.setContent(`<!doctype html>
-  <body style="margin:0;width:1200px;height:630px;display:grid;grid-template-columns:1fr 1fr;gap:6px;background:#09090b">
-    ${shots.map((shot) => `<img style="width:597px;height:312px;display:block" src="data:image/jpeg;base64,${shot.toString("base64")}">`).join("")}
-  </body>`);
-await card.screenshot({ path: "site/public/share/use-cases-1200x630.jpg", type: "jpeg", quality: 88 });
-
 await browser.close();
-console.log("share cards written");
+console.log("share card written");

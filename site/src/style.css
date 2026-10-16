@@ -558,7 +558,7 @@
   navigation: auto;
 }
 
-/* ---- About, Use cases and Create your own: plain pages on paper. */
+/* ---- How it works and Create your own: plain pages on paper. */
 
 body.page {
   @apply font-sans;
@@ -631,8 +631,8 @@ body.page {
   background: oklch(0.91 0.03 80);
   box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.08);
 }
-.about-links {
-  @apply mt-6 space-y-2 border-t border-ink/10 pt-5 text-[0.95rem]/6 text-ink-soft;
+.more-links {
+  @apply mt-8 space-y-2 border-t border-ink/10 pt-5 text-[0.95rem]/6 text-ink-soft;
 }
 .leaflet pre.wrap {
   white-space: pre-wrap;
@@ -649,6 +649,165 @@ body.page .links a {
 }
 body.page .links a:hover {
   background: oklch(0 0 0 / 0.09);
+}
+
+/* ---- Two examples on How it works: a piece of somebody else's website each,
+   in its own look, on a card. */
+
+.example {
+  @apply mt-5 overflow-hidden rounded-xl p-4 shadow-md ring-1 ring-black/10 sm:p-6;
+}
+.example h3 {
+  @apply mt-2 text-2xl/tight font-bold text-balance;
+}
+.example-note {
+  @apply text-sm/6 text-ink-soft;
+}
+.leaflet .example-note {
+  margin-top: 0.75rem;
+}
+
+/* A science magazine: newsprint, Didot and Charter, a flame-orange accent. */
+.example-article {
+  font-family: Charter, "Iowan Old Style", Georgia, serif;
+  color: oklch(0.19 0.03 265);
+  background: oklch(0.985 0.006 85);
+}
+.example-masthead {
+  @apply flex items-baseline justify-between border-b pb-2 text-xl tracking-[0.18em] uppercase;
+  font-family: Didot, "Bodoni 72", "Times New Roman", serif;
+  border-color: oklch(0.19 0.03 265 / 0.2);
+}
+.leaflet .example-masthead {
+  margin-top: 0;
+}
+.example-masthead span {
+  @apply font-sans text-[0.6rem] font-semibold tracking-widest;
+  color: oklch(0.58 0.2 35);
+}
+.example-article h3 {
+  font-family: Didot, "Bodoni 72", "Times New Roman", serif;
+}
+.example-dropcap::first-letter {
+  float: left;
+  margin: 0.05em 0.08em 0 0;
+  font-family: Didot, "Bodoni 72", serif;
+  font-size: 3.4em;
+  line-height: 0.8;
+  color: oklch(0.58 0.2 35);
+}
+.example-article figure {
+  @apply mt-4;
+}
+.example-figure {
+  @apply relative block rounded-lg;
+  background:
+    radial-gradient(circle at 50% 100%, oklch(0.68 0.22 42 / 0.35), transparent 65%),
+    oklch(0.14 0.025 265);
+}
+.example-figure img {
+  @apply mx-auto aspect-[4/3] w-full object-contain p-4;
+}
+.example-figure span,
+.example-product-image span {
+  @apply absolute top-2.5 right-2.5 rounded-full px-2.5 py-1 font-sans text-xs font-bold;
+  color: oklch(0.19 0.03 265);
+  background: oklch(0.985 0.006 85);
+}
+.example-article figcaption {
+  @apply mt-2 font-sans text-xs/5;
+  color: oklch(0.32 0.03 265);
+}
+.example-article figcaption b {
+  color: oklch(0.58 0.2 35);
+}
+.example-more {
+  @apply rounded-md;
+}
+
+/* A Halloween shop: aubergine dark, bone white and a pumpkin glow. */
+.example-shop {
+  font-family: ui-rounded, "SF Pro Rounded", system-ui, sans-serif;
+  color: oklch(0.95 0.025 85);
+  background: oklch(0.15 0.03 310);
+}
+.example-shop-head {
+  @apply flex items-center justify-between border-b border-white/10 pb-3 font-bold;
+}
+.leaflet .example-shop-head {
+  margin-top: 0;
+}
+.example-shop-head small {
+  @apply ml-1 text-xs font-medium opacity-60;
+}
+.example-bag {
+  @apply rounded-full bg-white/10 px-3 py-1 text-sm;
+}
+.example-bag b {
+  @apply ml-1 inline-block min-w-5 rounded-full px-1.5 text-center text-xs/5;
+  color: oklch(0.15 0.03 310);
+  background: oklch(0.72 0.21 50);
+}
+.example-product {
+  @apply mt-4 grid grid-cols-[minmax(0,9rem)_1fr] items-center gap-4 sm:grid-cols-[minmax(0,12rem)_1fr];
+}
+.example-product-image {
+  @apply relative block aspect-square rounded-xl;
+  background: radial-gradient(circle at 50% 62%, oklch(0.72 0.21 50 / 0.5), transparent 65%), oklch(0.2 0.04 310);
+}
+.example-product-image img {
+  @apply size-full object-contain p-3;
+}
+.example-product-image span {
+  @apply top-2 right-auto left-2 text-[0.65rem];
+}
+.example-shop h3 {
+  @apply mt-0 text-lg;
+}
+.leaflet .example-shop p {
+  @apply mt-1 text-sm/5 opacity-70;
+}
+.leaflet .example-shop .example-price {
+  @apply text-xl font-black opacity-100;
+}
+.example-shop button {
+  @apply mt-2 rounded-full px-4 py-2 text-sm font-bold;
+  color: oklch(0.15 0.03 310);
+  background: oklch(0.78 0.19 58);
+}
+.leaflet .example-shop .example-bag-note {
+  @apply mt-2 text-xs/5 opacity-100;
+  color: oklch(0.85 0.14 70);
+}
+
+/* A short flash on whatever a tap in AR brought you to. */
+@keyframes arrived {
+  from { box-shadow: 0 0 0 6px oklch(0.72 0.21 50 / 0.6); }
+  to { box-shadow: 0 0 0 6px transparent; }
+}
+.arrived {
+  animation: arrived 1.6s ease-out;
+}
+
+/* No AR on this device: a QR code to open the page on an iPhone. */
+.no-ar {
+  @apply m-auto w-[min(22rem,calc(100%-2rem))] rounded-xl p-6 font-sans text-ink shadow-2xl;
+  background: var(--color-paper);
+}
+.no-ar::backdrop {
+  background: oklch(0.2 0.02 45 / 0.55);
+}
+.no-ar h2 {
+  @apply text-lg font-bold;
+}
+.no-ar p {
+  @apply mt-2 text-sm/6 text-ink-soft;
+}
+.no-ar .qr {
+  @apply mx-auto;
+}
+.no-ar .btn-cream {
+  @apply w-full;
 }
 
 /* Tailwind Plus table (Application UI · Lists · Tables · Simple). */
@@ -680,32 +839,6 @@ body.page .links a:hover {
 }
 .credits-list li + li {
   margin-top: 0.3rem;
-}
-
-/* ---- Use cases: one card per made-up website. */
-
-.case {
-  @apply flex h-full flex-col rounded-xl bg-white p-3 ring-1 ring-ink/10 transition hover:ring-ink/25;
-}
-.leaflet a.case {
-  font-weight: inherit;
-  color: inherit;
-  text-decoration: none;
-}
-.case-image {
-  @apply aspect-[16/10] w-full rounded-lg object-contain p-3 transition duration-300 group-hover:scale-[1.02];
-}
-.case-site {
-  @apply mt-3 text-xs font-semibold tracking-wide text-ink-soft uppercase;
-}
-.case-title {
-  @apply mt-0.5 font-serif text-lg font-bold text-ink;
-}
-.case-text {
-  @apply mt-1 flex-1 text-sm/6 text-ink-soft;
-}
-.case-trick {
-  @apply mt-3 self-start rounded-full bg-enamel/10 px-2.5 py-1 text-xs font-semibold text-enamel-dark;
 }
 
 /* ---- Create your own */
