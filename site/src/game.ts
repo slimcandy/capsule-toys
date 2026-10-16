@@ -364,4 +364,6 @@ function toy(model: Model) {
 }
 
 renderShelves();
+// On a Mac or Android, the first screen says what the machine is for.
+$("no-ar-note").hidden = canAR;
 if (canAR) prefetch(next);

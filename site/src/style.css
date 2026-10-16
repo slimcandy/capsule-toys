@@ -153,6 +153,19 @@
   height: auto;
   rotate: calc(var(--turn) * 1deg);
 }
+/* One line under Play on a Mac or Android, where AR can't open. */
+.no-ar-note {
+  position: absolute;
+  inset: auto 6% 1.2%;
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: clamp(0.68rem, 2.6vw, 0.85rem);
+  line-height: 1.25;
+  text-align: center;
+  text-wrap: balance;
+  color: var(--color-cream);
+  text-shadow: 0 1px 2px oklch(0 0 0 / 0.8);
+}
 /* Soft dark edges: the picture melts into the room around it. */
 .scene::after {
   content: "";
