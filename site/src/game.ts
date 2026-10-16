@@ -299,7 +299,7 @@ async function finish() {
   play.disabled = false;
 }
 
-// ---- The shelves: what you've collected, in order. Empty space is empty.
+// ---- The cabinet: what you've collected, in order. Empty shelves stay empty.
 
 const PER_ROW = 4;
 $("total-count").textContent = String(models.length);
@@ -307,8 +307,7 @@ $("total-count").textContent = String(models.length);
 function renderShelves() {
   const have = collection();
   $("caught-count").textContent = String(have.length);
-  // Only the shelves in use, plus room for the next toy.
-  const rows = Math.min(Math.ceil(models.length / PER_ROW), Math.floor(have.length / PER_ROW) + 1);
+  const rows = Math.ceil(models.length / PER_ROW);
   $("shelves").replaceChildren(
     ...Array.from({ length: rows }, (_, row) => {
       const shelf = document.createElement("ul");

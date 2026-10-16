@@ -65,11 +65,31 @@ def render(model, size=512):
 
     out = os.path.join(SITE, "thumbs", f"{model['id']}.png")
     subprocess.run(["usdrecord", "--camera", "/Camera", "--imageWidth", str(size), shot, out], check=True, capture_output=True)
+    trim(out, size)
     return out
+
+def trim(path, size=512, margin=0.03):
+    """Cuts the empty margins off, and stands the model on the bottom edge,
+    so it sits on a shelf instead of floating above it."""
+    from PIL import Image
+    im = Image.open(path).convert("RGBA")
+    box = im.getchannel("A").getbbox()
+    if not box:
+        return
+    model = im.crop(box)
+    side = int(max(model.width, model.height) * (1 + 2 * margin))
+    canvas = Image.new("RGBA", (side, side), (0, 0, 0, 0))
+    canvas.paste(model, ((side - model.width) // 2, side - model.height - int(side * margin)))
+    canvas.resize((size, size), Image.LANCZOS).save(path, optimize=True)
 
 if __name__ == "__main__":
     os.makedirs(os.path.join(SITE, "thumbs"), exist_ok=True)
     wanted = set(sys.argv[1:])
+    if wanted == {"--trim"}:
+        # Just re-trim what's already rendered.
+        for model in CATALOG:
+            trim(os.path.join(SITE, "thumbs", f"{model['id']}.png"))
+        sys.exit()
     for model in CATALOG:
         if not wanted or model["id"] in wanted:
             print(render(model))

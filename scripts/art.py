@@ -61,3 +61,13 @@ icon = arcade.crop((232, 460, 792, 1020))
 for size, name in ((180, "apple-touch-icon.png"), (192, "icon-192.png"), (512, "icon-512.png")):
     icon.resize((size, size), Image.LANCZOS).save(OUT / "icons" / name, optimize=True)
 print("textures and icons written")
+
+# The shelf: the cabinet on black, keyed to nothing. Only true black goes;
+# the dark wood in the corners stays.
+shelf = Image.open(ROOT / "art" / "shelf.png").convert("RGB")
+lum = shelf.convert("L")
+alpha = lum.point(lambda v: 0 if v <= 6 else 255 if v >= 22 else int((v - 6) * 255 / 16))
+rgba = shelf.convert("RGBA")
+rgba.putalpha(alpha)
+rgba.save(OUT / "art" / "shelf.webp", quality=84, method=6)
+print(f"shelf {rgba.width}x{rgba.height}")
