@@ -1,4 +1,12 @@
-node_modules/
-.cache/
+node_modules
 dist
-.parcel-cache/
+.DS_Store
+.venv
+__pycache__
+# Raw downloads: the fixed models in site/public/models are what ships.
+/models/downloads/
+/site/public/fonts/MonoLisa-*.ttf
+
+# Local Netlify folder
+.netlify
+.netlify

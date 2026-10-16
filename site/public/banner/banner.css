@@ -1,0 +1,60 @@
+/* The ticket inside AR: 81 points tall (customHeight=small), full width. */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  box-sizing: border-box;
+  padding: 8px 18px 6px;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  color: oklch(0.27 0.04 45);
+  background:
+    linear-gradient(oklch(0.38 0.14 20) 0 4px, oklch(0.78 0.12 85) 4px 5px, transparent 5px),
+    linear-gradient(oklch(0.95 0.03 85), oklch(0.9 0.045 80));
+  -webkit-text-size-adjust: 100%;
+}
+p {
+  margin: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.title {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.15;
+}
+.name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.stamp {
+  flex: none;
+  padding: 3px 7px 2px;
+  border-radius: 4px;
+  font-family: -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: oklch(0.98 0.01 90);
+  background: var(--rarity);
+  box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.3), 0 1px 0 oklch(0 0 0 / 0.2);
+}
+body[data-rarity="common"] { --rarity: oklch(0.55 0.11 200); }
+body[data-rarity="rare"] { --rarity: oklch(0.52 0.19 300); }
+body[data-rarity="special"] { --rarity: oklch(0.66 0.15 70); }
+.credit {
+  font-size: 13px;
+  color: oklch(0.45 0.04 45);
+}

@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Capsule Toys</title>
+    <meta name="description" content="A capsule toy machine for your iPhone. Turn the knob, and a random 3D model opens in augmented reality: on your face or in your room." />
+    <link rel="canonical" href="https://ar.avolkov.dev/" />
+    <meta name="author" content="Aleksei Volkov" />
+    <meta name="theme-color" content="#1f140f" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Capsule Toys" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" href="/icons/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+    <link rel="preload" as="image" href="/art/arcade.jpg" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Capsule Toys" />
+    <meta property="og:locale" content="en_GB" />
+    <meta property="og:url" content="https://ar.avolkov.dev/" />
+    <meta property="og:title" content="Capsule Toys: a random 3D model in AR" />
+    <meta property="og:description" content="Turn the knob of a capsule toy machine, and a random 3D model opens in AR on your iPhone. On your face, or in your room." />
+    <meta property="og:image" content="https://ar.avolkov.dev/share/card-1200x630.jpg?v=3" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="A vintage capsule toy machine with a glass globe full of coloured capsules, on a wooden counter in a dim arcade." />
+    <meta property="og:publish_date" content="2026-10-16" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="stylesheet" href="./src/style.css" />
+  </head>
+  <body class="arcade">
+    <div class="room" aria-hidden="true"></div>
+
+    <main class="hall">
+      <h1 class="sr-only">Capsule Toys</h1>
+
+      <!-- The scene is one rendered picture; only the moving parts sit on top of it. -->
+      <div class="scene" id="scene">
+        <img class="scene-art" src="/art/arcade.jpg" width="1024" height="1452" decoding="async" fetchpriority="high"
+          alt="A vintage capsule toy machine with a glass globe full of coloured capsules, on a wooden counter in a dim arcade. A sign above reads Capsule Toys: small things for a more playful day." />
+        <img class="globe-art" id="globe-art" src="/art/globe.jpg" width="484" height="484" alt="" aria-hidden="true" />
+        <button type="button" class="knob" id="knob" aria-label="Turn the knob: a full turn clockwise">
+          <img class="knob-art" src="/art/knob.png" width="152" height="152" alt="" />
+        </button>
+        <div class="chute" aria-hidden="true">
+          <img class="chute-capsule" id="chute-capsule" src="/art/capsule-common.png" width="88" height="88" alt="" hidden />
+        </div>
+        <button type="button" class="play" id="play" aria-label="Play">
+          <img class="play-art" src="/art/play.png" width="538" height="126" alt="" />
+        </button>
+      </div>
+
+      <section class="bookcase" aria-labelledby="collection-title">
+        <div class="plaque">
+          <h2 id="collection-title">Collection</h2>
+          <p class="plaque-count"><span id="caught-count">0</span> of <span id="total-count">0</span></p>
+        </div>
+        <div class="shelves" id="shelves"></div>
+      </section>
+
+      <nav class="links" aria-label="More">
+        <a href="/how-it-works">How it works</a>
+        <a href="/create">Create your own</a>
+      </nav>
+
+      <footer class="credits">
+        Made by <a href="https://avolkov.dev">Aleksei Volkov</a> ·
+        <a href="https://github.com/slimcandy/capsule-toys">Source</a> ·
+        <a href="/how-it-works#credits">model credits</a>
+      </footer>
+    </main>
+
+    <div class="reveal" id="reveal" hidden>
+      <div class="reveal-backdrop" id="reveal-backdrop"></div>
+      <div class="reveal-stage">
+        <div class="reveal-glow" id="reveal-glow" aria-hidden="true"></div>
+        <img class="reveal-model" id="reveal-model" alt="" width="512" height="512" />
+        <div class="capsule" id="capsule" aria-hidden="true">
+          <img class="capsule-top" id="capsule-top" src="/art/capsule-common.png" width="88" height="88" alt="" />
+          <img class="capsule-bottom" id="capsule-bottom" src="/art/capsule-common.png" width="88" height="88" alt="" />
+        </div>
+      </div>
+      <div class="ticket" id="ticket" hidden role="dialog" aria-modal="true" aria-labelledby="ticket-title">
+        <p class="ticket-kicker"><span class="stamp" id="ticket-rarity"></span><span>Capsule Toys</span></p>
+        <h2 class="ticket-title" id="ticket-title"></h2>
+        <p class="ticket-credit" id="ticket-credit"></p>
+        <p class="ticket-note">It opens in AR on an iPhone, iPad or Apple Vision Pro. Scan to play there:</p>
+        <div class="qr" id="ticket-qr"></div>
+        <button type="button" class="btn-cream" id="ticket-close">Back to the machine</button>
+      </div>
+    </div>
+
+    <script type="module" src="./src/game.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,831 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "MonoLisa";
+  src: url("/fonts/MonoLisa-Normal.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --font-sans: -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  --font-sign: Copperplate, "Copperplate Gothic Bold", "Copperplate Gothic", Baskerville, Georgia, serif;
+  --font-mono: "MonoLisa", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --color-ink: oklch(0.27 0.04 45);
+  --color-ink-soft: oklch(0.47 0.04 50);
+  --color-paper: oklch(0.96 0.025 85);
+  --color-cream: oklch(0.93 0.045 85);
+  --color-cream-deep: oklch(0.84 0.06 80);
+  --color-room-deep: oklch(0.13 0.03 40);
+
+  /* Worn enamel red and burgundy, past sRGB on P3 screens. */
+  --color-enamel: oklch(0.55 0.22 28);
+  --color-enamel-light: oklch(0.67 0.21 32);
+  --color-enamel-dark: oklch(0.4 0.17 25);
+  --color-burgundy: oklch(0.36 0.14 20);
+  --color-burgundy-deep: oklch(0.26 0.1 20);
+
+  --color-brass: oklch(0.78 0.12 85);
+  --color-brass-light: oklch(0.92 0.09 92);
+  --color-brass-dark: oklch(0.55 0.1 78);
+  --color-amber: oklch(0.86 0.15 75);
+
+  --color-common: oklch(0.72 0.12 200);
+  --color-rare: oklch(0.62 0.2 305);
+  --color-special: oklch(0.82 0.16 85);
+}
+
+:root {
+  /* Film grain for painted wood, from an SVG filter: no image to load. */
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.16 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+    background: var(--color-room-deep);
+  }
+  html:has(body.page) {
+    background: var(--color-paper);
+  }
+  body {
+    @apply font-serif text-ink antialiased;
+    min-height: 100dvh;
+    overflow-x: hidden;
+    /* The room is a fixed layer behind; a body background would cover it. */
+    background: none;
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-amber);
+    outline-offset: 3px;
+  }
+}
+
+/* ---- The room: the same arcade, out of focus, behind the shelf. */
+
+.room {
+  position: fixed;
+  inset: -48px;
+  z-index: -1;
+  background: url("/art/arcade.jpg") center / cover no-repeat;
+  filter: blur(28px) brightness(0.5);
+}
+
+.hall {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+}
+
+/* ---- The scene: one rendered picture, scaled with the screen. The knob,
+   the capsule and the Play button are cut from the same picture and sit on
+   top of it, placed by percentages of its size. */
+
+.scene {
+  position: relative;
+  width: min(100vw, 600px);
+  aspect-ratio: 1024 / 1452;
+  margin-top: calc(-1 * env(safe-area-inset-top, 0px));
+  -webkit-user-select: none;
+  user-select: none;
+}
+.scene img {
+  -webkit-user-drag: none;
+}
+.scene-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* A copy of the globe, invisible until it rattles. */
+.globe-art {
+  position: absolute;
+  left: 26.37%;
+  top: 28.65%;
+  width: 47.27%;
+  height: auto;
+  clip-path: circle(49.5%);
+  opacity: 0;
+  pointer-events: none;
+}
+.globe-art.shaking {
+  opacity: 1;
+}
+
+.knob {
+  --turn: 0;
+  position: absolute;
+  left: 42.58%;
+  top: 57.85%;
+  width: 14.84%;
+  aspect-ratio: 1;
+  padding: 0;
+  border-radius: 50%;
+  touch-action: none;
+  cursor: grab;
+}
+.knob:active {
+  cursor: grabbing;
+}
+/* Only the raised disc turns: the cut stops just inside its bevel, with a
+   soft edge so it blends into the ring that stays put. */
+.knob-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+  -webkit-mask: radial-gradient(circle farthest-side, black 81%, transparent 86%);
+  mask: radial-gradient(circle farthest-side, black 81%, transparent 86%);
+  rotate: calc(var(--turn) * 1deg);
+}
+
+/* The opening of the chute: the capsule drops in and lands behind the tray. */
+.chute {
+  position: absolute;
+  left: 41.5%;
+  top: 70.45%;
+  width: 18.07%;
+  height: 5.85%;
+  overflow: hidden;
+}
+.chute-capsule {
+  position: absolute;
+  left: 50%;
+  bottom: -28%;
+  width: 58%;
+  height: auto;
+  translate: -50% 0;
+}
+
+.play {
+  position: absolute;
+  left: 23.83%;
+  top: 84.57%;
+  width: 52.54%;
+  aspect-ratio: 538 / 126;
+  padding: 0;
+  border-radius: 999px;
+  touch-action: manipulation;
+  cursor: pointer;
+}
+/* A taller thumb target than the picture of the button. */
+.play::before {
+  content: "";
+  position: absolute;
+  inset: -14px -8px;
+}
+.play-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 999px;
+  opacity: 0;
+  transition:
+    opacity 0.08s,
+    translate 0.08s,
+    filter 0.08s;
+}
+/* Pressed: the same button, a touch lower and darker. */
+.play:active .play-art,
+.play.pressed .play-art {
+  opacity: 1;
+  translate: 0 3%;
+  filter: brightness(0.8);
+}
+.play:disabled {
+  cursor: default;
+}
+.play:disabled .play-art {
+  opacity: 1;
+  filter: brightness(0.72) saturate(0.6);
+}
+
+/* ---- The collection: a wooden bookcase, with the toys you've got. */
+
+.bookcase {
+  width: min(100% - 2rem, 30rem);
+  margin-top: 1.25rem;
+  padding: 0.75rem 0.75rem 0;
+  border-radius: 10px;
+  overflow: hidden;
+  background:
+    var(--grain),
+    repeating-linear-gradient(90deg, transparent 0 11px, oklch(0 0 0 / 0.05) 11px 13px, oklch(1 0 0 / 0.04) 13px 19px),
+    linear-gradient(oklch(0.62 0.1 62), oklch(0.5 0.1 58));
+  box-shadow:
+    inset 0 0 0 1px oklch(0 0 0 / 0.35),
+    inset 0 2px 0 oklch(1 0 0 / 0.2),
+    0 10px 24px oklch(0 0 0 / 0.5);
+}
+.plaque {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 0.35rem 0.8rem;
+  border-radius: 6px;
+  font-family: var(--font-sign);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: oklch(0.32 0.06 60);
+  text-shadow: 0 1px 0 oklch(1 0 0 / 0.45);
+  background: linear-gradient(var(--color-brass-light), var(--color-brass) 50%, var(--color-brass-dark));
+  box-shadow:
+    inset 0 1px 0 oklch(1 0 0 / 0.6),
+    0 1px 2px oklch(0 0 0 / 0.5);
+}
+.plaque h2 {
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+.plaque-count {
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+.shelves {
+  margin-top: 0.5rem;
+  margin-inline: -0.75rem;
+}
+.shelf {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  align-items: end;
+  min-height: 6.4rem;
+  padding: 0.5rem 0.4rem 14px;
+}
+.shelf::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 14px;
+  background: linear-gradient(oklch(0.8 0.09 72), oklch(0.56 0.1 60) 30%, oklch(0.36 0.08 55));
+  box-shadow: 0 4px 6px oklch(0 0 0 / 0.5);
+}
+.toy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+  width: 100%;
+  padding: 0 0.15rem 0.3rem;
+}
+.toy img {
+  width: 100%;
+  max-width: 76px;
+  aspect-ratio: 1;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 4px oklch(0 0 0 / 0.55));
+}
+.toy[data-rarity="special"] img {
+  filter: drop-shadow(0 6px 4px oklch(0 0 0 / 0.55)) drop-shadow(0 0 8px oklch(0.85 0.15 85 / 0.6));
+}
+.toy span {
+  font-size: 0.66rem;
+  line-height: 1.15;
+  text-align: center;
+  color: var(--color-cream);
+  text-shadow: 0 1px 1px oklch(0 0 0 / 0.7);
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+.links a {
+  @apply rounded-full px-4 py-2.5 text-sm font-semibold;
+  color: var(--color-cream);
+  background: oklch(1 0 0 / 0.08);
+  box-shadow: inset 0 0 0 1px oklch(1 0 0 / 0.2);
+}
+.links a:hover {
+  background: oklch(1 0 0 / 0.14);
+}
+.credits {
+  margin-top: 1.5rem;
+  padding-inline: 1rem;
+  font-size: 0.75rem;
+  text-align: center;
+  color: oklch(0.7 0.04 70);
+}
+.credits a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* ---- The reveal: the capsule comes out, pops, and the toy rises. */
+
+.reveal {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: max(1rem, env(safe-area-inset-top)) 1rem max(1rem, env(safe-area-inset-bottom));
+}
+.reveal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 42%, oklch(0.34 0.07 50 / 0.75), oklch(0.1 0.03 40 / 0.93) 70%);
+  backdrop-filter: blur(8px);
+}
+.reveal-stage {
+  position: relative;
+  width: min(68vw, 300px);
+  aspect-ratio: 1;
+}
+.reveal-glow {
+  position: absolute;
+  inset: -20%;
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in oklch, var(--rarity) 85%, white) 0%, color-mix(in oklch, var(--rarity) 60%, transparent) 35%, transparent 68%);
+  opacity: 0;
+}
+.reveal-model {
+  position: absolute;
+  inset: 4%;
+  width: 92%;
+  height: 92%;
+  object-fit: contain;
+  opacity: 0;
+  filter: drop-shadow(0 12px 10px oklch(0 0 0 / 0.5));
+}
+.capsule {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 42%;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  filter: drop-shadow(0 10px 8px oklch(0 0 0 / 0.5));
+}
+.capsule-top,
+.capsule-bottom {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.capsule-top {
+  clip-path: inset(0 0 50% 0);
+}
+.capsule-bottom {
+  clip-path: inset(50% 0 0 0);
+}
+
+/* The ticket: the toy's details on a device without AR. */
+.ticket {
+  position: relative;
+  width: min(100%, 22rem);
+  padding: 1rem 1.1rem 1.1rem;
+  border-radius: 12px;
+  background:
+    linear-gradient(var(--color-burgundy) 0 6px, var(--color-brass) 6px 8px, transparent 8px),
+    linear-gradient(var(--color-paper), var(--color-cream));
+  box-shadow: 0 20px 40px oklch(0 0 0 / 0.55);
+}
+.ticket-kicker {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.3rem;
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-ink-soft);
+}
+.ticket-title {
+  margin-top: 0.4rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+.ticket-credit {
+  margin-top: 0.3rem;
+  font-size: 0.9rem;
+  color: var(--color-ink-soft);
+}
+.ticket-note {
+  margin-top: 0.75rem;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: var(--color-ink-soft);
+}
+.stamp {
+  display: inline-block;
+  padding: 0.2rem 0.55rem 0.15rem;
+  border-radius: 4px;
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: oklch(0.98 0.01 90);
+  background: color-mix(in oklch, var(--rarity) 80%, black);
+  box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.3);
+}
+.qr {
+  width: 8.5rem;
+  margin-top: 0.75rem;
+  padding: 0.5rem;
+  border-radius: 8px;
+  background: white;
+  box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.1);
+}
+.qr svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.btn-cream {
+  @apply mt-4 rounded-md px-3.5 py-2.5 text-sm font-semibold;
+  font-family: var(--font-sans);
+  color: var(--color-ink);
+  background: linear-gradient(white, var(--color-cream));
+  box-shadow:
+    inset 0 1px 0 white,
+    0 0 0 1px oklch(0.6 0.05 60),
+    0 1px 2px oklch(0 0 0 / 0.3);
+}
+
+[data-rarity="common"] { --rarity: var(--color-common); }
+[data-rarity="rare"] { --rarity: var(--color-rare); }
+[data-rarity="special"] { --rarity: var(--color-special); }
+
+/* ---- Pages move with a cross-fade. */
+
+@view-transition {
+  navigation: auto;
+}
+
+/* ---- How it works and Create your own: plain pages on paper. */
+
+body.page {
+  @apply font-sans;
+  background: var(--color-paper);
+}
+.back {
+  display: inline-block;
+  margin-top: max(1.25rem, env(safe-area-inset-top));
+  padding: 0.5rem 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-ink-soft);
+}
+.leaflet {
+  margin-top: 0.75rem;
+}
+.leaflet-kicker {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-enamel);
+}
+.leaflet-title {
+  margin-top: 0.3rem;
+  font-family: var(--font-serif);
+  font-size: 2.1rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+.leaflet .lead {
+  margin-top: 0.75rem;
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  line-height: 1.5;
+}
+.leaflet h2 {
+  margin-top: 2rem;
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+.leaflet p {
+  margin-top: 0.6rem;
+  line-height: 1.6;
+}
+.leaflet p a,
+.leaflet li a {
+  font-weight: 600;
+  color: var(--color-enamel-dark);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.leaflet :not(pre) > code {
+  padding: 0.05em 0.3em;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: oklch(0.9 0.03 80);
+}
+.leaflet pre {
+  margin-top: 0.85rem;
+  padding: 0.9rem 1rem;
+  overflow-x: auto;
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: var(--color-ink);
+  background: oklch(0.91 0.03 80);
+  box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.08);
+}
+.leaflet .note {
+  font-size: 0.82rem;
+  color: var(--color-ink-soft);
+}
+body.page .links a {
+  color: var(--color-ink);
+  background: oklch(0 0 0 / 0.05);
+  box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.12);
+}
+body.page .links a:hover {
+  background: oklch(0 0 0 / 0.09);
+}
+
+/* Tailwind Plus table (Application UI · Lists · Tables · Simple). */
+.table-wrap {
+  margin-top: 0.75rem;
+  overflow-x: auto;
+}
+.table-wrap table {
+  @apply min-w-full divide-y divide-ink/20 text-sm;
+}
+.table-wrap th {
+  @apply py-2.5 pr-3 text-left font-semibold text-ink;
+}
+.table-wrap td {
+  @apply py-2.5 pr-3 align-top text-ink-soft;
+}
+.table-wrap tbody {
+  @apply divide-y divide-ink/10;
+}
+.table-wrap td:first-child {
+  @apply font-medium text-ink;
+}
+
+.credits-list {
+  margin-top: 0.6rem;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--color-ink-soft);
+}
+.credits-list li + li {
+  margin-top: 0.3rem;
+}
+
+/* ---- Create your own */
+
+.create-grid {
+  display: grid;
+  gap: 2rem;
+  margin-top: 1.75rem;
+}
+@media (width >= 52rem) {
+  .create-grid {
+    grid-template-columns: minmax(0, 1fr) 18rem;
+    align-items: start;
+  }
+  .create-side {
+    position: sticky;
+    top: 1rem;
+  }
+}
+
+/* Tailwind Plus inputs (Forms · Input groups · With label and help text). */
+.field-label {
+  @apply block text-sm/6 font-medium text-ink;
+}
+.field-input {
+  @apply block w-full rounded-md bg-white px-3 py-1.5 text-base text-ink outline-1 -outline-offset-1 outline-ink/20 placeholder:text-ink-soft/60 focus:outline-2 focus:-outline-offset-2 focus:outline-enamel sm:text-sm/6;
+}
+.field-help {
+  @apply mt-2 text-sm text-ink-soft;
+}
+.field-help code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+}
+.field-help a,
+.field-help button {
+  font-weight: 600;
+  color: var(--color-enamel-dark);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+/* Tailwind Plus select (Forms · Select menus · Simple native). */
+.field-select {
+  @apply col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-ink outline-1 -outline-offset-1 outline-ink/20 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-enamel sm:text-sm/6;
+}
+.select-chevron {
+  @apply pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-ink-soft sm:size-4;
+}
+/* Tailwind Plus radio cards (Forms · Radio groups · Small cards). */
+.choice {
+  @apply relative flex min-h-11 items-center justify-center rounded-md border border-ink/20 bg-white p-2 text-center has-checked:border-enamel has-checked:bg-enamel has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-enamel;
+}
+.choice input {
+  @apply absolute inset-0 appearance-none focus:outline-none;
+}
+.choice span {
+  @apply text-sm font-medium text-ink;
+}
+.choice:has(:checked) span {
+  @apply text-white;
+}
+/* Tailwind Plus toggle (Forms · Toggles · With right label). */
+.toggle {
+  @apply relative inline-flex w-11 shrink-0 rounded-full bg-ink/15 p-0.5 outline-offset-2 outline-enamel transition-colors duration-200 ease-in-out has-checked:bg-enamel has-focus-visible:outline-2;
+}
+.toggle-thumb {
+  @apply size-5 rounded-full bg-white shadow-xs ring-1 ring-ink/5 transition-transform duration-200 ease-in-out;
+}
+.toggle:has(:checked) .toggle-thumb {
+  @apply translate-x-5;
+}
+.toggle input {
+  @apply absolute inset-0 size-full appearance-none focus:outline-hidden;
+}
+
+/* The phone preview: the model in a camera view, and Quick Look's banner. */
+.phone {
+  position: relative;
+  width: min(100%, 16rem);
+  margin-inline: auto;
+  aspect-ratio: 9 / 17;
+  overflow: hidden;
+  border-radius: 2.2rem;
+  border: 8px solid oklch(0.2 0.01 250);
+  background: radial-gradient(circle at 50% 35%, oklch(0.92 0.02 80), oklch(0.75 0.03 60));
+  box-shadow: 0 12px 30px oklch(0 0 0 / 0.25);
+}
+.phone::before {
+  content: "";
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  translate: -50% 0;
+  width: 34%;
+  height: 18px;
+  border-radius: 99px;
+  background: oklch(0.12 0 0);
+  z-index: 1;
+}
+.phone-scene {
+  position: absolute;
+  inset: 18% 8% auto;
+  width: 84%;
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: contain;
+}
+.ql-banner {
+  position: absolute;
+  inset: auto 8px 10px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 0.7rem;
+  border-radius: 14px;
+  font-family: var(--font-sans);
+  background: oklch(0.97 0 0 / 0.92);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 2px 8px oklch(0 0 0 / 0.15);
+}
+.ql-text {
+  min-width: 0;
+  flex: 1;
+}
+.ql-title {
+  overflow: hidden;
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.ql-sub,
+.ql-site {
+  overflow: hidden;
+  font-size: 0.68rem;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: oklch(0.5 0 0);
+}
+.ql-button {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: oklch(0.58 0.2 255);
+}
+.ql-pay {
+  max-width: 45%;
+  padding: 0.35rem 0.55rem;
+  border-radius: 7px;
+  font-size: 0.62rem;
+  font-weight: 600;
+  line-height: 1.15;
+  text-align: center;
+  color: white;
+  background: black;
+}
+.ql-custom {
+  position: absolute;
+  inset: auto 8px 10px;
+  display: grid;
+  place-items: center;
+  padding: 0.5rem;
+  border-radius: 14px;
+  border: 2px dashed oklch(0.5 0 0 / 0.5);
+  background: oklch(0.97 0 0 / 0.85);
+  font-family: var(--font-sans);
+  font-size: 0.68rem;
+  text-align: center;
+  overflow-wrap: anywhere;
+  color: oklch(0.4 0 0);
+}
+/* 81, 121 and 161 points on a 390-point-wide phone, scaled to this one. */
+.ql-custom[data-height="small"] { height: 21%; }
+.ql-custom[data-height="medium"] { height: 31%; }
+.ql-custom[data-height="large"] { height: 41%; }
+
+/* Tailwind Plus alert (Feedback · Alerts · With description), in yellow. */
+.warnings {
+  @apply mt-4 rounded-md bg-yellow-50 p-4 text-sm text-yellow-800;
+}
+.warnings ul {
+  @apply mt-2 list-disc space-y-1 pl-5 text-yellow-700;
+}
+
+.try {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+.try-link {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.4rem 1rem 0.4rem 0.4rem;
+  border-radius: 999px;
+  font-weight: 700;
+  color: white;
+  background: var(--color-enamel);
+  box-shadow: 0 2px 0 var(--color-enamel-dark);
+}
+.try-link img {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  object-fit: cover;
+  background: oklch(1 0 0 / 0.85);
+}
+.try-qr {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.try-qr .qr {
+  flex: none;
+  width: 6.5rem;
+  margin: 0;
+}
+
+.code-block {
+  position: relative;
+}
+.code-block pre {
+  padding-right: 4.5rem;
+}
+/* The link is one long URL: wrap it anywhere. Other code scrolls sideways. */
+.code-block pre.wrap {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.copy {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  @apply rounded-md px-2.5 py-1.5 text-xs font-semibold;
+  color: var(--color-ink);
+  background: white;
+  box-shadow: 0 0 0 1px oklch(0 0 0 / 0.15);
+}
+.copy:hover {
+  background: var(--color-cream);
+}

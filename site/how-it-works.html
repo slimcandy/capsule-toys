@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>How Capsule Toys works: AR from a single link</title>
+    <meta name="description" content="How a web page opens augmented reality on an iPhone with one link, how the banner inside AR is a page of its own, and which devices it works on." />
+    <link rel="canonical" href="https://ar.avolkov.dev/how-it-works" />
+    <meta name="author" content="Aleksei Volkov" />
+    <meta name="theme-color" content="#f5ecdc" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" href="/icons/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Capsule Toys" />
+    <meta property="og:locale" content="en_GB" />
+    <meta property="og:url" content="https://ar.avolkov.dev/how-it-works" />
+    <meta property="og:title" content="How Capsule Toys works: AR from a single link" />
+    <meta property="og:description" content="One link with rel=&quot;ar&quot;, a few words after the #, and a page of your own as the banner inside AR. That's the whole API." />
+    <meta property="og:image" content="https://ar.avolkov.dev/share/card-1200x630.jpg?v=3" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="A vintage capsule toy machine with a glass globe full of coloured capsules, on a wooden counter in a dim arcade." />
+    <meta property="og:publish_date" content="2026-10-16" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="stylesheet" href="./src/style.css" />
+  </head>
+  <body class="page">
+    <main class="mx-auto max-w-2xl px-4 pb-12">
+      <a href="/" class="back">← Back to the machine</a>
+
+      <article class="leaflet">
+        <p class="leaflet-kicker">Instructions inside every capsule</p>
+        <h1 class="leaflet-title">How it works</h1>
+        <p class="lead">
+          There's no app and no 3D engine on this page. Safari on an iPhone already knows how to show a 3D model in your room:
+          it's called AR Quick Look. A web page only has to link to the model the right way.
+        </p>
+
+        <h2>1. One link</h2>
+        <p>
+          A normal link to a <code>.usdz</code> file, with <code>rel="ar"</code> and a picture as its first child.
+          Safari sees both and opens the model in AR instead of downloading it. When you close AR, you're back on the page.
+        </p>
+<pre><code>&lt;a rel="ar" href="/models/curiosity.usdz"&gt;
+  &lt;img src="/thumbs/curiosity.png" alt="Curiosity rover"&gt;
+&lt;/a&gt;</code></pre>
+
+        <h2>2. Opening it from code</h2>
+        <p>
+          The knob doesn't show a link to tap. The page keeps a hidden one and clicks it from code.
+          Safari allows that only shortly after a real tap, so the capsule has about three seconds to drop, roll and pop.
+          On an iPhone 14 Pro with iOS 18.7, three seconds still worked; the machine uses two and a half at most.
+        </p>
+<pre><code>const link = document.createElement("a");
+link.rel = "ar";
+link.append(document.createElement("img"));
+document.body.append(link);
+
+link.href = "/models/crown.usdz#custom=https://ar.avolkov.dev/banner/crown.html&amp;customHeight=large";
+link.click();</code></pre>
+
+        <h2>3. The banner inside AR</h2>
+        <p>
+          Everything after the <code>#</code> sets up a banner at the bottom of the AR view. Quick Look has one built in:
+          a title, a subtitle, a price, and a button with your own text or an Apple Pay button. Or it shows a page of yours,
+          81, 121 or 161 points tall, with no scripts in it. The machine does the second: every toy has a small page with its
+          name, rarity and credit, written at build time from the same catalog the machine draws from.
+        </p>
+        <p>
+          With the built-in button, a tap inside AR sends a message back to the link on the page:
+        </p>
+<pre><code>link.addEventListener("message", (event) =&gt; {
+  if (event.data === "_apple_ar_quicklook_button_tapped") {
+    // add to cart, open a page…
+  }
+});</code></pre>
+        <p>Every option, with a live preview of the banner and the HTML to copy, is on the <a href="/create">Create your own</a> page.</p>
+
+        <h2>4. Front or back camera</h2>
+        <p>
+          The page can't choose the camera. The model does. A model anchored to a face opens the selfie camera and follows your head;
+          anything else goes on the floor or a table in front of the back camera. The anchor is one line inside the file:
+        </p>
+<pre><code>def Xform "Scene" (apiSchemas = ["Preliminary_AnchoringAPI"])
+{
+    uniform token preliminary:anchoring:type = "face"
+}</code></pre>
+
+        <h2>5. The invisible head</h2>
+        <p>
+          AR Quick Look hides 3D objects behind your face, but not behind your hair or the back of your head.
+          Without help, the back of a crown draws on top of your forehead. So every hat in the machine carries an
+          invisible head: a shape with RealityKit's occlusion material, which draws nothing and hides whatever is behind it.
+        </p>
+
+        <h2>6. Where it works</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Device</th>
+                <th scope="col">In your room</th>
+                <th scope="col">On your face</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>iPhone with Face ID, Safari</td><td>Yes</td><td>Yes</td></tr>
+              <tr><td>iPhone with Touch ID, Safari</td><td>Yes</td><td>No: needs the TrueDepth camera</td></tr>
+              <tr><td>iPad, Safari</td><td>Yes</td><td>Face ID models only</td></tr>
+              <tr><td>Added to the Home Screen</td><td>Yes</td><td>Yes</td></tr>
+              <tr><td>Apple Vision Pro, Safari</td><td>Yes, in your space</td><td>No face to wear it on</td></tr>
+              <tr><td>Browsers inside other apps</td><td colspan="2">Often not: open the page in Safari</td></tr>
+              <tr><td>Mac, Android, Windows</td><td colspan="2">No AR: the machine shows the toy's ticket and a QR code to play on an iPhone</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="note">
+          Banners need iOS 13.3 or later; face anchors need iOS 13. Tested on an iPhone 14 Pro with iOS 18.7, in Safari and from the Home Screen.
+        </p>
+
+        <h2>7. Checked by Apple's own tool</h2>
+        <p>
+          Before a model goes in the machine, a script runs Apple's <code>usdchecker --arkit</code> on it, checks that hats
+          are anchored to a face, that the rest stand on the floor at their real size, that every file is small enough to open fast,
+          and that every model credits its author with a licence that allows sharing it.
+          Downloaded models usually fail the first check and get fixed automatically.
+        </p>
+
+        <h2 id="credits">Models</h2>
+        <ul class="credits-list" id="credits-list" role="list"></ul>
+      </article>
+
+      <nav class="links" aria-label="More">
+        <a href="/">Play the machine</a>
+        <a href="/create">Create your own</a>
+      </nav>
+    </main>
+    <script type="module" src="./src/how.ts"></script>
+  </body>
+</html>

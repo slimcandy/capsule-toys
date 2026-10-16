@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3b2519"/>
+      <stop offset="1" stop-color="#1a100c"/>
+    </linearGradient>
+    <radialGradient id="lamp" cx="0.5" cy="0.1" r="0.7">
+      <stop offset="0" stop-color="#f3b24a" stop-opacity="0.45"/>
+      <stop offset="1" stop-color="#f3b24a" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glass" cx="0.5" cy="0.45" r="0.55">
+      <stop offset="0" stop-color="#6a4a36" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#2a1a12" stop-opacity="0.9"/>
+    </radialGradient>
+    <linearGradient id="red" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#e94d3d"/>
+      <stop offset="1" stop-color="#9a1d1b"/>
+    </linearGradient>
+    <linearGradient id="brass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f4df9f"/>
+      <stop offset="0.5" stop-color="#caa34f"/>
+      <stop offset="1" stop-color="#8b6a2b"/>
+    </linearGradient>
+    <linearGradient id="cream" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f4e5c6"/>
+      <stop offset="1" stop-color="#d8c198"/>
+    </linearGradient>
+    <radialGradient id="ball" cx="0.36" cy="0.32" r="0.78">
+      <stop offset="0" stop-color="#fff" stop-opacity="0.6"/>
+      <stop offset="0.45" stop-color="#fff" stop-opacity="0"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0.4"/>
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <rect width="512" height="512" rx="112" fill="url(#lamp)"/>
+  <!-- The lid -->
+  <circle cx="256" cy="66" r="11" fill="url(#brass)"/>
+  <ellipse cx="256" cy="94" rx="92" ry="26" fill="url(#red)"/>
+  <rect x="148" y="106" width="216" height="14" rx="7" fill="url(#brass)"/>
+  <!-- The globe -->
+  <circle cx="256" cy="226" r="126" fill="url(#glass)"/>
+  <g>
+    <circle cx="212" cy="298" r="31" fill="#d8362e"/><circle cx="212" cy="298" r="31" fill="url(#ball)"/>
+    <circle cx="270" cy="304" r="31" fill="#2f63c8"/><circle cx="270" cy="304" r="31" fill="url(#ball)"/>
+    <circle cx="322" cy="282" r="31" fill="#e8a22c"/><circle cx="322" cy="282" r="31" fill="url(#ball)"/>
+    <circle cx="190" cy="248" r="31" fill="#2aa39f"/><circle cx="190" cy="248" r="31" fill="url(#ball)"/>
+    <circle cx="246" cy="250" r="31" fill="#7b3fb6"/><circle cx="246" cy="250" r="31" fill="url(#ball)"/>
+    <circle cx="302" cy="232" r="31" fill="#4ca848"/><circle cx="302" cy="232" r="31" fill="url(#ball)"/>
+    <circle cx="214" cy="196" r="31" fill="#e8a22c"/><circle cx="214" cy="196" r="31" fill="url(#ball)"/>
+    <circle cx="272" cy="190" r="31" fill="#d8362e"/><circle cx="272" cy="190" r="31" fill="url(#ball)"/>
+    <circle cx="330" cy="222" r="26" fill="#f0c930"/><circle cx="330" cy="222" r="26" fill="url(#ball)"/>
+  </g>
+  <circle cx="256" cy="226" r="126" fill="none" stroke="#fff" stroke-opacity="0.35" stroke-width="3"/>
+  <ellipse cx="206" cy="158" rx="42" ry="22" fill="#fff" opacity="0.5"/>
+  <!-- The neck, the body, the knob and the base -->
+  <rect x="160" y="340" width="192" height="24" rx="8" fill="url(#brass)"/>
+  <path d="M176 362h160l16 112H160z" fill="url(#cream)"/>
+  <path d="M176 362h24l-14 112h-26z" fill="#5c1a1d"/>
+  <path d="M312 362h24l16 112h-26z" fill="#5c1a1d"/>
+  <rect x="220" y="376" width="72" height="72" rx="6" fill="#454b53"/>
+  <circle cx="256" cy="412" r="25" fill="#8e949c"/>
+  <rect x="235" y="407" width="42" height="10" rx="4" fill="#d2d6da"/>
+  <rect x="148" y="470" width="216" height="24" rx="6" fill="#7b1f23"/>
+</svg>

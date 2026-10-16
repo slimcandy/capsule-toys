@@ -1,0 +1,14 @@
+[
+  { "id": "aviators", "title": "Aviators", "camera": "wear", "rarity": "common", "made": { "wear": "aviators" }, "credit": { "author": "Capsule Toys", "licence": "CC0-1.0" } },
+  { "id": "hockey", "title": "Goalie mask", "camera": "wear", "rarity": "common", "made": { "wear": "hockey" }, "credit": { "author": "Capsule Toys", "licence": "CC0-1.0" } },
+  { "id": "visor", "title": "Cyber visor", "camera": "wear", "rarity": "rare", "made": { "wear": "visor" }, "credit": { "author": "Capsule Toys", "licence": "CC0-1.0" } },
+  { "id": "viking", "title": "Viking helmet", "camera": "wear", "rarity": "rare", "made": { "wear": "viking" }, "credit": { "author": "Capsule Toys", "licence": "CC0-1.0" } },
+  { "id": "tricorn", "title": "Pirate captain", "camera": "wear", "rarity": "rare", "made": { "wear": "tricorn" }, "credit": { "author": "Capsule Toys", "licence": "CC0-1.0" } },
+  { "id": "astronaut", "title": "Astronaut helmet", "camera": "wear", "rarity": "rare", "made": { "wear": "astronaut" }, "credit": { "author": "Capsule Toys", "licence": "CC0-1.0" } },
+  { "id": "crown", "title": "Royal crown", "camera": "wear", "rarity": "special", "made": { "wear": "crown" }, "credit": { "author": "Capsule Toys", "licence": "CC0-1.0" } },
+
+  { "id": "lunar-module", "title": "Apollo 11 lunar module", "camera": "place", "rarity": "rare", "made": { "download": "Apollo_11_Lunar_Module_-_1969.usdz", "size": 2.0 }, "credit": { "author": "NINATOR", "licence": "CC-BY-4.0", "url": "https://sketchfab.com/3d-models/88cac6203b1c4860a269b674f6657105" } },
+  { "id": "saturn-v", "title": "Saturn V", "camera": "place", "rarity": "rare", "made": { "download": "Saturn_V_Rocket_-_Nasa.usdz", "size": 2.4 }, "credit": { "author": "dannzjs", "licence": "CC-BY-4.0", "url": "https://sketchfab.com/3d-models/9b61dbd396334aca8faac51f9ef63f2e" } },
+  { "id": "curiosity", "title": "Curiosity rover", "camera": "place", "rarity": "special", "made": { "download": "NASA_Curiosity_Clean.usdz", "size": 3.0 }, "credit": { "author": "Thomas Flynn", "licence": "CC-BY-4.0", "url": "https://sketchfab.com/3d-models/0696a383f3e841d2b5c7636ee8a58aba" } },
+  { "id": "room", "title": "Alex's flat", "camera": "place", "rarity": "special", "made": { "download": "room.usdz" }, "credit": { "author": "Aleksei Volkov", "licence": "own" } }
+]

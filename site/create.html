@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Create your own AR link · Capsule Toys</title>
+    <meta name="description" content="Paste a link to your .usdz file and get the HTML for AR Quick Look: a banner, a button or Apple Pay, a live preview, and a link to try on your iPhone." />
+    <link rel="canonical" href="https://ar.avolkov.dev/create" />
+    <meta name="author" content="Aleksei Volkov" />
+    <meta name="theme-color" content="#f5ecdc" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" href="/icons/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Capsule Toys" />
+    <meta property="og:locale" content="en_GB" />
+    <meta property="og:url" content="https://ar.avolkov.dev/create" />
+    <meta property="og:title" content="Create your own AR link" />
+    <meta property="og:description" content="Paste a link to a .usdz file, set up the banner, and copy the HTML. Every AR Quick Look option, with a live preview." />
+    <meta property="og:image" content="https://ar.avolkov.dev/share/card-1200x630.jpg?v=3" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="A vintage capsule toy machine with a glass globe full of coloured capsules, on a wooden counter in a dim arcade." />
+    <meta property="og:publish_date" content="2026-10-16" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="stylesheet" href="./src/style.css" />
+  </head>
+  <body class="page">
+    <main class="mx-auto max-w-5xl px-4 pb-12">
+      <a href="/" class="back">← Back to the machine</a>
+
+      <article class="leaflet">
+        <p class="leaflet-kicker">An HTML generator</p>
+        <h1 class="leaflet-title">Create your own</h1>
+        <p class="lead">
+          Paste a link to your <code>.usdz</code> file, set up the banner people see in AR, and copy the HTML.
+          Everything here goes into the part of the URL after the <code>#</code>.
+        </p>
+
+        <div class="create-grid">
+          <form id="form" class="space-y-6" novalidate>
+            <div>
+              <label for="file" class="field-label">Model file</label>
+              <input id="file" name="file" type="url" inputmode="url" placeholder="https://example.com/chair.usdz" class="field-input mt-2" aria-describedby="file-help" />
+              <p id="file-help" class="field-help">
+                Served as <code>model/vnd.usdz+zip</code>, or Safari downloads it instead.
+                No file yet? <button type="button" id="example">Use one of ours</button>.
+              </p>
+            </div>
+            <div>
+              <label for="image" class="field-label">Preview image</label>
+              <input id="image" name="image" type="url" inputmode="url" placeholder="https://example.com/chair.jpg" class="field-input mt-2" aria-describedby="image-help" />
+              <p id="image-help" class="field-help">The picture inside the link. Quick Look shows it while the model loads.</p>
+            </div>
+
+            <fieldset>
+              <legend class="field-label">Banner</legend>
+              <div class="mt-2 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                <label class="choice"><input type="radio" name="banner" value="none" checked /><span>None</span></label>
+                <label class="choice"><input type="radio" name="banner" value="button" /><span>Button</span></label>
+                <label class="choice"><input type="radio" name="banner" value="pay" /><span>Apple Pay</span></label>
+                <label class="choice"><input type="radio" name="banner" value="custom" /><span>Your page</span></label>
+              </div>
+            </fieldset>
+
+            <div id="button-field" hidden>
+              <label for="callToAction" class="field-label">Button text</label>
+              <input id="callToAction" name="callToAction" type="text" placeholder="Add to cart" class="field-input mt-2" />
+            </div>
+
+            <div id="pay-field" hidden>
+              <label for="applePayButtonType" class="field-label">Apple Pay button</label>
+              <div class="mt-2 grid grid-cols-1">
+                <select id="applePayButtonType" name="applePayButtonType" class="field-select"></select>
+                <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" class="select-chevron"><path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" /></svg>
+              </div>
+            </div>
+
+            <div id="item-fields" class="space-y-6" hidden>
+              <div>
+                <label for="checkoutTitle" class="field-label">Title</label>
+                <input id="checkoutTitle" name="checkoutTitle" type="text" placeholder="Biplane toy" class="field-input mt-2" />
+              </div>
+              <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                <div>
+                  <label for="checkoutSubtitle" class="field-label">Subtitle</label>
+                  <input id="checkoutSubtitle" name="checkoutSubtitle" type="text" placeholder="Rustic finish" class="field-input mt-2" />
+                </div>
+                <div>
+                  <label for="price" class="field-label">Price</label>
+                  <input id="price" name="price" type="text" placeholder="€15" class="field-input mt-2" />
+                </div>
+              </div>
+            </div>
+
+            <div id="custom-fields" class="space-y-6" hidden>
+              <div>
+                <label for="custom" class="field-label">Banner page</label>
+                <input id="custom" name="custom" type="url" inputmode="url" placeholder="https://example.com/banner.html" class="field-input mt-2" aria-describedby="custom-help" />
+                <p id="custom-help" class="field-help">An HTTPS page Quick Look shows as the banner. Links and scripts in it don't run. The machine's own banners work like this.</p>
+              </div>
+              <fieldset>
+                <legend class="field-label">Banner height</legend>
+                <div class="mt-2 grid grid-cols-3 gap-3">
+                  <label class="choice"><input type="radio" name="customHeight" value="small" checked /><span>Small · 81 pt</span></label>
+                  <label class="choice"><input type="radio" name="customHeight" value="medium" /><span>Medium · 121</span></label>
+                  <label class="choice"><input type="radio" name="customHeight" value="large" /><span>Large · 161</span></label>
+                </div>
+              </fieldset>
+            </div>
+
+            <div>
+              <label for="canonicalWebPageURL" class="field-label">Page to share</label>
+              <input id="canonicalWebPageURL" name="canonicalWebPageURL" type="url" inputmode="url" placeholder="https://example.com/biplane" class="field-input mt-2" aria-describedby="share-help" />
+              <p id="share-help" class="field-help">What Quick Look's share button sends, instead of the model file.</p>
+            </div>
+
+            <!-- Tailwind Plus toggle (Forms · Toggles · With right label) -->
+            <div class="flex items-center gap-3">
+              <div class="toggle">
+                <span class="toggle-thumb"></span>
+                <input id="scaling" name="scaling" type="checkbox" checked aria-labelledby="scaling-label" aria-describedby="scaling-help" />
+              </div>
+              <div class="text-sm">
+                <label id="scaling-label" for="scaling" class="font-medium text-ink">Let people resize it</label>
+                <span id="scaling-help" class="text-ink-soft">Off keeps it at real size.</span>
+              </div>
+            </div>
+          </form>
+
+          <div class="create-side">
+            <div class="phone" aria-label="Banner preview" role="img" id="phone">
+              <img class="phone-scene" id="phone-scene" alt="" width="512" height="512" />
+              <div class="ql-banner" id="ql-banner" hidden>
+                <div class="ql-text">
+                  <p class="ql-title" id="ql-title"></p>
+                  <p class="ql-sub" id="ql-sub"></p>
+                  <p class="ql-site" id="ql-site"></p>
+                </div>
+                <span class="ql-button" id="ql-button"></span>
+                <span class="ql-pay" id="ql-pay"></span>
+              </div>
+              <div class="ql-custom" id="ql-custom" hidden></div>
+            </div>
+
+            <div class="warnings" id="warnings" hidden role="status">
+              <p class="font-medium">Quick Look will ignore part of this</p>
+              <ul id="warning-list" role="list"></ul>
+            </div>
+
+            <div class="try">
+              <a rel="ar" id="try" class="try-link">
+                <img id="try-image" src="" alt="Open in AR" width="512" height="512" />
+                <span>Try it in AR</span>
+              </a>
+              <div class="try-qr" id="try-qr" hidden>
+                <div class="qr" id="qr"></div>
+                <p class="text-xs text-ink-soft">Scan to open these settings on an iPhone, then tap “Try it in AR”.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h2>The HTML</h2>
+        <div class="code-block">
+          <pre class="wrap"><code id="html-code"></code></pre>
+          <button type="button" class="copy" data-copy="html-code">Copy</button>
+        </div>
+
+        <div id="listener" hidden>
+          <h2>When someone taps the button</h2>
+          <p>Safari sends a message to the link that opened AR. Listen for it:</p>
+          <div class="code-block">
+            <pre><code id="js-code"></code></pre>
+            <button type="button" class="copy" data-copy="js-code">Copy</button>
+          </div>
+        </div>
+      </article>
+
+      <nav class="links" aria-label="More">
+        <a href="/">Play the machine</a>
+        <a href="/how-it-works">How it works</a>
+      </nav>
+    </main>
+    <script type="module" src="./src/create.ts"></script>
+  </body>
+</html>
