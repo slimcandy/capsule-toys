@@ -90,12 +90,6 @@ def key(im: Image.Image, is_background, despill=False) -> Image.Image:
         for x in range(w):
             if is_background(*px[x, y]):
                 mp[x, y] = 255
-    # Flood from every border pixel that is background.
-    seen = Image.new("L", (w, h), 0)
-    for x in range(w):
-        for y in (0, h - 1):
-            if mp[x, y] == 255 and seen.getpixel((x, y)) == 0:
-                _Draw.floodfill(seen, (x, y), 255, thresh=0) if False else None
     # Pillow's floodfill works on the image itself: fill the marker from the corners.
     filled = marker.copy()
     for x, y in ((0, 0), (w - 1, 0), (0, h - 1), (w - 1, h - 1), (w // 2, 0), (w // 2, h - 1), (0, h // 2), (w - 1, h // 2)):
@@ -104,8 +98,6 @@ def key(im: Image.Image, is_background, despill=False) -> Image.Image:
     alpha = filled.point(lambda v: 0 if v == 128 else 255).filter(ImageFilter.GaussianBlur(0.8))
     out = im.convert("RGBA")
     if despill:
-        r, g, b, _ = out.split()
-        g = Image.eval(Image.merge("RGB", (r, g, b)).convert("RGB").split()[1], lambda v: v)
         data = out.load()
         for y in range(h):
             for x in range(w):

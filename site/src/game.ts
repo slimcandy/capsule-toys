@@ -39,7 +39,7 @@ function link(model: Model) {
 
 /** Warm the cache for the next capsule, so AR opens faster. */
 function prefetch(model: Model) {
-  void fetch(file(model), { priority: "low" } as RequestInit).catch(() => {});
+  void fetch(file(model), { priority: "low" }).catch(() => {});
   new Image().src = capsuleArt(model);
 }
 

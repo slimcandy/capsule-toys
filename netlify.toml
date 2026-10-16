@@ -19,10 +19,11 @@
   to = "/how-it-works"
   status = 301
 
+# img-src allows any https: image: Create your own puts a pasted preview image on the page.
 [[headers]]
   for = "/*"
   [headers.values]
-    Content-Security-Policy = "default-src 'self'; style-src 'self'; script-src 'self'; font-src 'self'; img-src 'self' data: https:; connect-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'"
+    Content-Security-Policy = "default-src 'self'; style-src 'self'; script-src 'self'; font-src 'self'; img-src 'self' https:; connect-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'"
     Referrer-Policy = "no-referrer"
     X-Content-Type-Options = "nosniff"
 
