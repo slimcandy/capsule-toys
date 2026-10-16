@@ -5,7 +5,7 @@ dist
 __pycache__
 # Raw downloads: the fixed models in site/public/models are what ships.
 /models/downloads/
-/site/public/fonts/MonoLisa-*.ttf
+/site/public/fonts/MonoLisa*
 
 # Local Netlify CLI state
 .netlify
