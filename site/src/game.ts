@@ -11,7 +11,7 @@ const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const canAR = supportsAR();
 
 const knob = $<HTMLButtonElement>("knob");
-const knobArt = knob.querySelector<HTMLElement>(".knob-art")!;
+const knobArt = knob.querySelector<HTMLElement>(".knob-bar-art")!;
 const play = $<HTMLButtonElement>("play");
 const reveal = $("reveal");
 
@@ -177,7 +177,7 @@ async function vend() {
   const glow = $("reveal-glow");
   const image = $<HTMLImageElement>("reveal-model");
   reveal.dataset.rarity = model.rarity;
-  for (const half of capsule.querySelectorAll<HTMLImageElement>("img")) half.src = capsuleArt(model);
+  $<HTMLImageElement>("capsule-ball").src = capsuleArt(model);
   capsule.hidden = false;
   image.src = thumb(model);
   image.alt = model.title;
@@ -201,11 +201,18 @@ async function vend() {
   // A wobble, like it's about to burst.
   await capsule.animate([{ rotate: "0deg" }, { rotate: "-9deg" }, { rotate: "8deg" }, { rotate: "-5deg" }, { rotate: "0deg" }], { duration: 300 }).finished;
 
-  // Pop.
+  // Pop: the ball bursts into its two halves, which fly off.
   sound.pop(model.rarity);
-  const fly = { duration: 520, easing: "cubic-bezier(0.2, 0.8, 0.3, 1)", fill: "forwards" as const };
-  $("capsule-top").animate([{ transform: "none", opacity: 1 }, { transform: "translate(-30%, -120%) rotate(-35deg)", opacity: 0 }], fly);
-  $("capsule-bottom").animate([{ transform: "none", opacity: 1 }, { transform: "translate(20%, 110%) rotate(25deg)", opacity: 0 }], fly);
+  const fly = { duration: 620, easing: "cubic-bezier(0.2, 0.8, 0.3, 1)", fill: "forwards" as const };
+  $("capsule-ball").animate([{ opacity: 1, scale: 1 }, { opacity: 0, scale: 1.25 }], { duration: 140, fill: "forwards" });
+  $("capsule-top").animate(
+    [{ transform: "translate(18%, 30%) scale(0.7)", opacity: 1 }, { transform: "translate(-40%, -70%) rotate(-30deg)", opacity: 0 }],
+    fly,
+  );
+  $("capsule-bottom").animate(
+    [{ transform: "translate(-6%, -22%) scale(0.7)", opacity: 1 }, { transform: "translate(35%, 70%) rotate(22deg)", opacity: 0 }],
+    fly,
+  );
   glow.animate([{ opacity: 0, scale: 0.3 }, { opacity: 1, scale: 1.1 }, { opacity: 0.75, scale: 1 }], { duration: 700, fill: "forwards" });
   image.animate([{ opacity: 0, scale: 0.4, translate: "0 18%" }, { opacity: 1, scale: 1, translate: "0 0" }], { duration: 520, easing: "cubic-bezier(0.2, 1.4, 0.4, 1)", fill: "forwards" });
 
@@ -290,7 +297,7 @@ async function finish() {
   }
   await fade;
   reveal.hidden = true;
-  for (const el of reveal.querySelectorAll<HTMLElement>(".capsule, .capsule-top, .capsule-bottom, .reveal-glow, .reveal-model, .reveal-backdrop")) {
+  for (const el of reveal.querySelectorAll<HTMLElement>(".capsule, .capsule-ball, .capsule-half, .reveal-glow, .reveal-model, .reveal-backdrop")) {
     el.getAnimations().forEach((a) => a.cancel());
   }
   reveal.getAnimations().forEach((a) => a.cancel());

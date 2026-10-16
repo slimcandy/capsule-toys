@@ -119,12 +119,14 @@
   opacity: 1;
 }
 
+/* The knob is two renders over the picture: a disc that stays put, covering
+   the painted one, and a bar that turns on it. */
 .knob {
   --turn: 0;
   position: absolute;
-  left: 42.58%;
-  top: 57.85%;
-  width: 14.84%;
+  left: 42.68%;
+  top: 57.92%;
+  width: 14.65%;
   aspect-ratio: 1;
   padding: 0;
   border-radius: 50%;
@@ -134,15 +136,35 @@
 .knob:active {
   cursor: grabbing;
 }
-/* Only the raised disc turns: the cut stops just inside its bevel, with a
-   soft edge so it blends into the ring that stays put. */
-.knob-art {
-  display: block;
+.knob-disc {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
-  -webkit-mask: radial-gradient(circle farthest-side, black 81%, transparent 86%);
-  mask: radial-gradient(circle farthest-side, black 81%, transparent 86%);
+}
+.knob-bar {
+  position: absolute;
+  left: 7.5%;
+  top: 50%;
+  width: 85%;
+  translate: 0 -50%;
+  /* The shadow is cast by whatever is inside, so it stays below the bar
+     however it turns. */
+  filter: drop-shadow(0 2px 2px oklch(0 0 0 / 0.6));
+}
+.knob-bar-art {
+  display: block;
+  width: 100%;
+  height: auto;
   rotate: calc(var(--turn) * 1deg);
+}
+/* Soft dark edges: the picture melts into the room around it. */
+.scene::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  box-shadow: inset 0 0 70px 24px oklch(0.1 0.03 40 / 0.7);
 }
 
 /* The opening of the chute: the capsule drops in and lands behind the tray. */
@@ -304,6 +326,45 @@
   text-shadow: 0 1px 0 oklch(1 0.05 90 / 0.45);
 }
 
+.aside {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+/* ---- Desktop: the machine and the cabinet side by side on the counter,
+   both as tall as the window, instead of one phone-shaped column. */
+@media (width >= 64rem) and (height >= 36rem) {
+  .hall {
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 2.5vw;
+    min-height: 100svh;
+    padding: 0 2vw;
+  }
+  .scene {
+    width: auto;
+    height: 100svh;
+    margin-top: 0;
+  }
+  .aside {
+    width: auto;
+    gap: 1.25rem;
+    padding-bottom: 3svh;
+  }
+  .bookcase {
+    width: auto;
+    height: 78svh;
+    margin-top: 0;
+  }
+  .links,
+  .credits {
+    margin-top: 0;
+  }
+}
+
 .links {
   display: flex;
   flex-wrap: wrap;
@@ -372,6 +433,7 @@
   opacity: 0;
   filter: drop-shadow(0 12px 10px oklch(0 0 0 / 0.5));
 }
+/* The capsule: a closed ball, and the two rendered halves it bursts into. */
 .capsule {
   position: absolute;
   left: 50%;
@@ -381,18 +443,32 @@
   translate: -50% -50%;
   filter: drop-shadow(0 10px 8px oklch(0 0 0 / 0.5));
 }
-.capsule-top,
-.capsule-bottom {
+.capsule-ball {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
 }
+.capsule-half {
+  position: absolute;
+  width: 110%;
+  height: auto;
+  opacity: 0;
+}
 .capsule-top {
-  clip-path: inset(0 0 50% 0);
+  left: -12%;
+  top: -36%;
 }
 .capsule-bottom {
-  clip-path: inset(50% 0 0 0);
+  left: 2%;
+  top: 38%;
+}
+/* The halves are rendered blue; the other rarities are the same plastic, recoloured. */
+.reveal[data-rarity="rare"] .capsule-half {
+  filter: hue-rotate(58deg) saturate(1.15);
+}
+.reveal[data-rarity="special"] .capsule-half {
+  filter: hue-rotate(-162deg) saturate(1.5) brightness(1.2);
 }
 
 /* The ticket: the toy's details on a device without AR. */

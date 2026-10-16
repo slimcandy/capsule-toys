@@ -71,3 +71,69 @@ rgba = shelf.convert("RGBA")
 rgba.putalpha(alpha)
 rgba.save(OUT / "art" / "shelf.webp", quality=84, method=6)
 print(f"shelf {rgba.width}x{rgba.height}")
+
+
+# ---- Pieces rendered on a flat background: the knob's disc and bar (on
+# black) and an opened capsule (on green). The background is flood-filled
+# from the border, so dark or green bits inside an object stay.
+
+from PIL import ImageDraw as _Draw, ImageFilter
+
+
+def key(im: Image.Image, is_background, despill=False) -> Image.Image:
+    """Alpha from the border inwards: everything the flood reaches goes."""
+    px = im.convert("RGB").load()
+    w, h = im.size
+    marker = Image.new("L", (w, h), 0)
+    mp = marker.load()
+    for y in range(h):
+        for x in range(w):
+            if is_background(*px[x, y]):
+                mp[x, y] = 255
+    # Flood from every border pixel that is background.
+    seen = Image.new("L", (w, h), 0)
+    for x in range(w):
+        for y in (0, h - 1):
+            if mp[x, y] == 255 and seen.getpixel((x, y)) == 0:
+                _Draw.floodfill(seen, (x, y), 255, thresh=0) if False else None
+    # Pillow's floodfill works on the image itself: fill the marker from the corners.
+    filled = marker.copy()
+    for x, y in ((0, 0), (w - 1, 0), (0, h - 1), (w - 1, h - 1), (w // 2, 0), (w // 2, h - 1), (0, h // 2), (w - 1, h // 2)):
+        if filled.getpixel((x, y)) == 255:
+            _Draw.floodfill(filled, (x, y), 128)
+    alpha = filled.point(lambda v: 0 if v == 128 else 255).filter(ImageFilter.GaussianBlur(0.8))
+    out = im.convert("RGBA")
+    if despill:
+        r, g, b, _ = out.split()
+        g = Image.eval(Image.merge("RGB", (r, g, b)).convert("RGB").split()[1], lambda v: v)
+        data = out.load()
+        for y in range(h):
+            for x in range(w):
+                R, G, B, A = data[x, y]
+                m = max(R, B)
+                if G > m:
+                    data[x, y] = (R, m, B, A)
+    out.putalpha(alpha)
+    return out
+
+
+def piece(name: str, src: str, is_background, size: int, despill=False, box=None):
+    im = Image.open(ROOT / "art" / src)
+    if box:
+        im = im.crop(box)
+    keyed = key(im, is_background, despill)
+    bbox = keyed.getchannel("A").getbbox()
+    keyed = keyed.crop(bbox)
+    scale = size / max(keyed.size)
+    keyed = keyed.resize((round(keyed.width * scale), round(keyed.height * scale)), Image.LANCZOS)
+    keyed.save(OUT / "art" / f"{name}.webp", quality=88, method=6)
+    print(f"{name}: {keyed.width}x{keyed.height} (from {bbox})")
+
+
+black = lambda r, g, b: max(r, g, b) < 16
+green = lambda r, g, b: g > 120 and g > r * 1.6 and g > b * 1.6
+piece("knob-disc", "knob-disc.png", black, 600)
+piece("knob-bar", "knob-bar.png", black, 600)
+halves = Image.open(ROOT / "art" / "capsule-halves.png")
+piece("capsule-top", "capsule-halves.png", green, 512, despill=True, box=(0, 0, halves.width // 2, halves.height))
+piece("capsule-bottom", "capsule-halves.png", green, 512, despill=True, box=(halves.width // 2, 0, halves.width, halves.height))

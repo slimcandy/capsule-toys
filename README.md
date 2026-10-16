@@ -9,7 +9,7 @@ A capsule toy machine for augmented reality. Turn the knob (or press Play): a ca
 
 No app, no 3D engine on the page: Safari's AR Quick Look does the 3D. The page only links to `.usdz` files the right way.
 
-The look is a 1970s arcade seen through early iOS. Like the skeuomorphic iOS of 2010, it's built from pictures, not geometry: the whole scene is one rendered image (`art/arcade.png`), and the parts that move, the knob, the Play button and the globe, are cut from the same image by `scripts/art.py` and laid over it by percentages, so they sit on it without a seam. The capsules come from the asset sheet next to it. The shelf below is CSS.
+The look is a 1970s arcade seen through early iOS. Like the skeuomorphic iOS of 2010, it's built from pictures, not geometry: the whole scene is one rendered image (`art/arcade.png`), and the parts that move are laid over it by percentages. The Play button and the globe are cut from the same image by `scripts/art.py`, so they sit on it without a seam; the knob is two separate renders, a disc that stays put and a bar that turns on it; the capsule, its two halves and the display cabinet for the collection are renders keyed out of flat backgrounds. On a desktop the machine and the cabinet stand side by side, as tall as the window.
 
 ## How the pieces fit
 

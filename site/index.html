@@ -42,7 +42,8 @@
           alt="A vintage capsule toy machine with a glass globe full of coloured capsules, on a wooden counter in a dim arcade. A sign above reads Capsule Toys: small things for a more playful day." />
         <img class="globe-art" id="globe-art" src="/art/globe.jpg" width="484" height="484" alt="" aria-hidden="true" />
         <button type="button" class="knob" id="knob" aria-label="Turn the knob: a full turn clockwise">
-          <img class="knob-art" src="/art/knob.png" width="152" height="152" alt="" />
+          <img class="knob-disc" src="/art/knob-disc.webp" width="598" height="600" alt="" />
+          <span class="knob-bar"><img class="knob-bar-art" src="/art/knob-bar.webp" width="600" height="172" alt="" /></span>
         </button>
         <div class="chute" aria-hidden="true">
           <img class="chute-capsule" id="chute-capsule" src="/art/capsule-common.png" width="88" height="88" alt="" hidden />
@@ -52,24 +53,26 @@
         </button>
       </div>
 
-      <section class="bookcase" aria-labelledby="collection-title">
-        <div class="plaque">
-          <h2 id="collection-title">Collection</h2>
-          <p class="plaque-count"><span id="caught-count">0</span> of <span id="total-count">0</span></p>
-        </div>
-        <div class="shelves" id="shelves"></div>
-      </section>
+      <div class="aside">
+        <section class="bookcase" aria-labelledby="collection-title">
+          <div class="plaque">
+            <h2 id="collection-title">Collection</h2>
+            <p class="plaque-count"><span id="caught-count">0</span> of <span id="total-count">0</span></p>
+          </div>
+          <div class="shelves" id="shelves"></div>
+        </section>
 
-      <nav class="links" aria-label="More">
-        <a href="/how-it-works">How it works</a>
-        <a href="/create">Create your own</a>
-      </nav>
+        <nav class="links" aria-label="More">
+          <a href="/how-it-works">How it works</a>
+          <a href="/create">Create your own</a>
+        </nav>
 
-      <footer class="credits">
-        Made by <a href="https://avolkov.dev">Aleksei Volkov</a> ·
-        <a href="https://github.com/slimcandy/capsule-toys">Source</a> ·
-        <a href="/how-it-works#credits">model credits</a>
-      </footer>
+        <footer class="credits">
+          Made by <a href="https://avolkov.dev">Aleksei Volkov</a> ·
+          <a href="https://github.com/slimcandy/capsule-toys">Source</a> ·
+          <a href="/how-it-works#credits">model credits</a>
+        </footer>
+      </div>
     </main>
 
     <div class="reveal" id="reveal" hidden>
@@ -78,8 +81,9 @@
         <div class="reveal-glow" id="reveal-glow" aria-hidden="true"></div>
         <img class="reveal-model" id="reveal-model" alt="" width="512" height="512" />
         <div class="capsule" id="capsule" aria-hidden="true">
-          <img class="capsule-top" id="capsule-top" src="/art/capsule-common.png" width="88" height="88" alt="" />
-          <img class="capsule-bottom" id="capsule-bottom" src="/art/capsule-common.png" width="88" height="88" alt="" />
+          <img class="capsule-ball" id="capsule-ball" src="/art/capsule-common.png" width="88" height="88" alt="" />
+          <img class="capsule-half capsule-top" id="capsule-top" src="/art/capsule-top.webp" width="474" height="512" alt="" />
+          <img class="capsule-half capsule-bottom" id="capsule-bottom" src="/art/capsule-bottom.webp" width="512" height="350" alt="" />
         </div>
       </div>
       <div class="ticket" id="ticket" hidden role="dialog" aria-modal="true" aria-labelledby="ticket-title">
